@@ -1,4 +1,4 @@
-import '../styles/main.css'
+import './global.css'
 
 import { BookContextProvider } from '@/context/bookContext'
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useRef } from 'react'
 
 import styled from 'styled-components'
@@ -68,7 +70,7 @@ export default function Book() {
 		return () => {
 			window.removeEventListener('keydown', onKeyDown)
 		}
-	}, [bookURL, bookViewer])
+	}, [bookURL])
 
 	const onNext = async () => {
 		await bookViewer.next()
