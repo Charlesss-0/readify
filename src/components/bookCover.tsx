@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react'
+
+import { FireDatabase } from '@/firebase'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { useBookContext } from '../../context/bookContext'
+import { useBookContext } from '@/context/bookContext'
 
 const Cover = styled.div`
 	background-position: center;
@@ -14,19 +17,24 @@ const Cover = styled.div`
 `
 
 export default function BookCover() {
+	const fireDatabase = new FireDatabase()
 	const { bookCover } = useBookContext()
 
 	return (
 		<div className="flex items-center justify-around gap-[4rem] h-[450px] p-[0.5rem]">
 			{bookCover && (
-				<Link href="/book">
-					<Cover
-						id="cover"
-						style={{
-							backgroundImage: `url('${bookCover}')`,
-						}}
-					/>
-				</Link>
+				<>
+					{bookCover.map((cover, i) => (
+						<Link key={i} href="/book">
+							<Cover
+								id="cover"
+								style={{
+									backgroundImage: `url('${cover}')`,
+								}}
+							/>
+						</Link>
+					))}
+				</>
 			)}
 		</div>
 	)

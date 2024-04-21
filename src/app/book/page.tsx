@@ -46,23 +46,23 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const { bookViewer, bookURL } = useBookContext()
+	const { epubReader, bookURL, bookCover } = useBookContext()
 	const viewerRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const loadBook = async () => {
-			await bookViewer.renderBook(bookURL)
+			await epubReader.renderBook(bookURL)
 
 			if (viewerRef.current) {
-				if (viewerRef.current !== bookViewer.getViewerRef()?.current) {
-					bookViewer.setViewerRef(viewerRef)
+				if (viewerRef.current !== epubReader.getViewerRef()?.current) {
+					epubReader.setViewerRef(viewerRef)
 				}
 			}
 		}
 		loadBook()
 
 		const onKeyDown = async (e: KeyboardEvent) => {
-			bookViewer.onKeyDown(e)
+			epubReader.onKeyDown(e)
 		}
 
 		window.addEventListener('keydown', onKeyDown)
@@ -73,11 +73,11 @@ export default function Book() {
 	}, [bookURL])
 
 	const onNext = async () => {
-		await bookViewer.next()
+		await epubReader.next()
 	}
 
 	const onPrevious = async () => {
-		await bookViewer.previous()
+		await epubReader.previous()
 	}
 
 	return (

@@ -1,5 +1,5 @@
-import AddBtn from './addBtn'
-import BookCover from './book/bookCover'
-import Bookshelf from './book/bookshelf'
+import Add from './addBtn'
+import BookCover from './bookCover'
+import Bookshelf from './bookshelf'
 
-export { BookCover, AddBtn, Bookshelf }
+export { BookCover, Add, Bookshelf }

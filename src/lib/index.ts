@@ -1,3 +1,3 @@
-import BookViewer from './epubjs/bookViewer'
+import EpubReader from './epub'
 
-export { BookViewer }
+export { EpubReader }

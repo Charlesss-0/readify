@@ -1,43 +1,46 @@
 'use client'
 
-import { AddBtn, Bookshelf } from '@/components'
-import React, { useEffect } from 'react'
+import { Add, Bookshelf } from '@/components'
+import { FireDatabase, FireStorage } from '@/firebase'
+import React, { useEffect, useState } from 'react'
 
-import { FireStorage } from '@/firebase'
 import { useBookContext } from '@/context/bookContext'
 
 export default function Home() {
 	const fireStorage = new FireStorage()
+	const fireDatabase = new FireDatabase()
 
-	const { bookViewer, setBookURL, bookURL, setBookCover } = useBookContext()
+	const { epubReader, setBookURL, setBookCover } = useBookContext()
 
 	const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (file) {
 			const url = await fireStorage.uploadAndGetURL(file)
+
 			setBookURL(url)
 		}
 	}
 
 	useEffect(() => {
-		const loadBook = async (): Promise<void> => {
-			if (bookURL) {
-				await bookViewer.renderBook(bookURL)
+		const renderBooks = async () => {
+			const books = await fireStorage.getList()
 
-				const cover = bookViewer.getBookCover()
-				setBookCover(cover)
-			}
+			books.forEach(async url => {
+				await epubReader.renderBook(url)
+				const cover = epubReader.getBookCover()
+
+				await fireDatabase.add({ id: url, cover: cover })
+			})
 		}
-
-		loadBook()
-	}, [bookURL])
+		renderBooks()
+	}, [])
 
 	return (
 		<div className="p-[1rem]">
 			<h1 className="text-[2rem] font-bold p-[1rem] text-center">My Library</h1>
 			<Bookshelf />
 
-			<AddBtn onFileChange={onFileChange} />
+			<Add onFileChange={onFileChange} />
 		</div>
 	)
 }
