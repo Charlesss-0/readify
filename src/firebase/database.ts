@@ -2,11 +2,6 @@ import { get, getDatabase, onValue, orderByChild, push, query, ref } from 'fireb
 
 import Initialize from './initialize'
 
-interface DataType {
-	cover: string
-	id: string
-}
-
 export default class FireDatabase extends Initialize {
 	private db: ReturnType<typeof getDatabase>
 
@@ -18,7 +13,7 @@ export default class FireDatabase extends Initialize {
 		this.read = this.read.bind(this)
 	}
 
-	public async add(value: DataType): Promise<void> {
+	public async add(value: Book): Promise<void> {
 		const dbRef = ref(this.db, 'books/')
 
 		try {

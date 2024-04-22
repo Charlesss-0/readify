@@ -1,5 +1,5 @@
 // type Book for firebase database values
-declare interface Book {
+interface Book {
 	id: string
 	cover: string
 }

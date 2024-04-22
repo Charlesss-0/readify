@@ -17,25 +17,25 @@ interface EpubReaderType {
 
 interface BookContextValue {
 	epubReader: EpubReaderType
+	book: Book[]
+	setBook: React.Dispatch<React.SetStateAction<Book[]>>
 	bookURL: string
 	setBookURL: React.Dispatch<React.SetStateAction<string>>
-	bookCover: Book[]
-	setBookCover: React.Dispatch<React.SetStateAction<Book[]>>
 }
 
 const BookContext = createContext<BookContextValue | null>(null)
 
 export function BookContextProvider({ children }: { children: React.ReactNode }) {
 	const epubReader = new EpubReader()
+	const [book, setBook] = useState<Book[]>([])
 	const [bookURL, setBookURL] = useState<string>('')
-	const [bookCover, setBookCover] = useState<Book[]>([])
 
 	const contextValue = {
 		epubReader,
+		book,
+		setBook,
 		bookURL,
 		setBookURL,
-		bookCover,
-		setBookCover,
 	}
 
 	return <BookContext.Provider value={contextValue}>{children}</BookContext.Provider>

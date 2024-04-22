@@ -46,7 +46,7 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const { epubReader, bookURL, bookCover } = useBookContext()
+	const { epubReader, bookURL } = useBookContext()
 	const viewerRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
