@@ -9,11 +9,11 @@ export default class FireStorage extends Initialize {
 		super()
 		this.init()
 		this.storage = getStorage()
-		this.uploadAndGetURL = this.uploadAndGetURL.bind(this)
+		this.upload = this.upload.bind(this)
 		this.getList = this.getList.bind(this)
 	}
 
-	private async upload(file: File): Promise<string> {
+	public async upload(file: File): Promise<string> {
 		const storageRef = ref(this.storage, `books/${file.name}`)
 
 		try {
@@ -27,16 +27,6 @@ export default class FireStorage extends Initialize {
 			return url
 		} catch (e: any) {
 			console.error('Error uploading file', e.message)
-			throw e
-		}
-	}
-
-	public async uploadAndGetURL(file: File): Promise<string> {
-		try {
-			const url = await this.upload(file)
-			return url
-		} catch (e: any) {
-			console.error('Error getting book URL', e.message)
 			throw e
 		}
 	}

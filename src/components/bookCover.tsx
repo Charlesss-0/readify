@@ -28,14 +28,15 @@ export default function BookCover() {
 					books.map(async url => {
 						await epubReader.renderBook(url)
 						const cover = epubReader.getBookCover()
+						const title = epubReader.getBookTitle()
 
-						return { id: url, cover: cover }
+						return { id: url, cover: cover, title: title }
 					})
 				)
 
 				setBook(bookData)
 			} catch (e: any) {
-				console.error('Error loading book cover:', e.message)
+				console.error('Error loading book:', e.message)
 			}
 		}
 		loadBookCover()
@@ -50,7 +51,7 @@ export default function BookCover() {
 			{book ? (
 				<>
 					{book.map(book => (
-						<Link href="/book" key={book.id} onClick={() => handleClick(book.id)}>
+						<Link href={`/book/${book.title}`} key={book.id} onClick={() => handleClick(book.id)}>
 							<Cover
 								key={book.id}
 								style={{
