@@ -56,6 +56,8 @@ export default function Book() {
 			const book = await fireDatabase.getBook(bookId)
 			if (book) {
 				await epubReader.renderBook(book.url)
+				console.log('Book id from context:', bookId)
+				console.log('Book url from database:', book.url)
 			}
 
 			if (viewerRef.current) {

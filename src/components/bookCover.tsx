@@ -55,7 +55,7 @@ export default function BookCover() {
 					{book.map(book => (
 						<Link
 							key={book.url}
-							href={`/book/${book.title}`}
+							href={`/book/${book.title.replace(/\s+/g, '')}`}
 							onClick={() => handleAdd({ url: book.url, id: book.id, title: book.title })}
 						>
 							<Cover
