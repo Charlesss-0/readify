@@ -99,7 +99,10 @@ export default class EpubReader {
 	public async next(): Promise<void> {
 		try {
 			if (this.rendition && this.viewerRef.current) {
-				if ((this.currentPage + 1) * this.pageWidth >= this.viewerRef.current.scrollWidth) {
+				if (
+					(this.currentPage + 1) * this.pageWidth >=
+					this.viewerRef.current.scrollWidth
+				) {
 					const nextSection = this.currentSection + 1
 					await this.rendition.display(nextSection)
 					this.currentSection = nextSection

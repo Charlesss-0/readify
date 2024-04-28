@@ -1,6 +1,6 @@
-// type Book for firebase database values
 interface Book {
 	id: string
-	cover: string
+	url: string
+	cover?: string
 	title: string
 }

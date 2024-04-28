@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
+import { FireDatabase } from '@/firebase'
 import styled from 'styled-components'
 import { useBookContext } from '@/context/bookContext'
 
@@ -46,12 +47,16 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const { epubReader, bookURL } = useBookContext()
+	const fireDatabase = new FireDatabase()
+	const { epubReader, bookId } = useBookContext()
 	const viewerRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const loadBook = async () => {
-			await epubReader.renderBook(bookURL)
+			const book = await fireDatabase.getBook(bookId)
+			if (book) {
+				await epubReader.renderBook(book.url)
+			}
 
 			if (viewerRef.current) {
 				if (viewerRef.current !== epubReader.getViewerRef()?.current) {
@@ -70,7 +75,7 @@ export default function Book() {
 		return () => {
 			window.removeEventListener('keydown', onKeyDown)
 		}
-	}, [bookURL])
+	}, [bookId])
 
 	const onNext = async () => {
 		await epubReader.next()

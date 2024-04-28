@@ -1,4 +1,12 @@
-import { get, getDatabase, onValue, orderByChild, push, query, ref } from 'firebase/database'
+import {
+	get,
+	getDatabase,
+	onValue,
+	orderByChild,
+	push,
+	query,
+	ref,
+} from 'firebase/database'
 
 import Initialize from './initialize'
 
@@ -10,7 +18,7 @@ export default class FireDatabase extends Initialize {
 		this.init()
 		this.db = getDatabase()
 		this.add = this.add.bind(this)
-		this.read = this.read.bind(this)
+		this.getBook = this.getBook.bind(this)
 	}
 
 	public async add(value: Book): Promise<void> {
@@ -39,7 +47,7 @@ export default class FireDatabase extends Initialize {
 		}
 	}
 
-	public async read(): Promise<Book[]> {
+	public async getBook(id: string): Promise<Book | null> {
 		const dbRef = ref(this.db, 'books/')
 
 		return new Promise((resolve, reject) => {
@@ -48,10 +56,11 @@ export default class FireDatabase extends Initialize {
 				snapshot => {
 					const data = snapshot.val()
 					if (data) {
-						const result = Object.values(data)
-						resolve(result as Book[])
+						const result = Object.values(data) as Book[]
+						const book = result.find(book => book.id === id)
+						resolve(book || null)
 					} else {
-						resolve([])
+						resolve(null)
 					}
 				},
 				error => reject(error)
