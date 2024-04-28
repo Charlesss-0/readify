@@ -17,7 +17,6 @@ const Cover = styled.div`
 
 export default function BookCover() {
 	const fireStorage = new FireStorage()
-	const fireDatabse = new FireDatabase()
 	const { epubReader, book, setBook } = useBookContext()
 
 	useEffect(() => {
