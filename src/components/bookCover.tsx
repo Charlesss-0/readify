@@ -18,7 +18,7 @@ const Cover = styled.div`
 export default function BookCover() {
 	const fireStorage = new FireStorage()
 	const fireDatabse = new FireDatabase()
-	const { epubReader, book, setBook, setBookId } = useBookContext()
+	const { epubReader, book, setBook } = useBookContext()
 
 	useEffect(() => {
 		const loadBookCover = async () => {
@@ -43,9 +43,8 @@ export default function BookCover() {
 		loadBookCover()
 	}, [])
 
-	const handleAdd = async ({ url, id, title }: Book) => {
-		await fireDatabse.add({ url, id, title })
-		setBookId(id)
+	const handleAdd = (url: string) => {
+		localStorage.setItem('bookUrl', url)
 	}
 
 	return (
@@ -56,7 +55,7 @@ export default function BookCover() {
 						<Link
 							key={book.url}
 							href={`/book/${book.title.replace(/\s+/g, '')}`}
-							onClick={() => handleAdd({ url: book.url, id: book.id, title: book.title })}
+							onClick={() => handleAdd(book.url)}
 						>
 							<Cover
 								style={{

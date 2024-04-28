@@ -47,17 +47,14 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const fireDatabase = new FireDatabase()
-	const { epubReader, bookId } = useBookContext()
+	const { epubReader } = useBookContext()
 	const viewerRef = useRef<HTMLDivElement>(null)
+	const bookURL = localStorage.getItem('bookUrl')
 
 	useEffect(() => {
 		const loadBook = async () => {
-			const book = await fireDatabase.getBook(bookId)
-			if (book) {
-				await epubReader.renderBook(book.url)
-				console.log('Book id from context:', bookId)
-				console.log('Book url from database:', book.url)
+			if (bookURL) {
+				await epubReader.renderBook(bookURL)
 			}
 
 			if (viewerRef.current) {
@@ -67,7 +64,9 @@ export default function Book() {
 			}
 		}
 		loadBook()
+	}, [bookURL])
 
+	useEffect(() => {
 		const onKeyDown = async (e: KeyboardEvent) => {
 			epubReader.onKeyDown(e)
 		}
@@ -77,7 +76,7 @@ export default function Book() {
 		return () => {
 			window.removeEventListener('keydown', onKeyDown)
 		}
-	}, [bookId])
+	}, [])
 
 	const onNext = async () => {
 		await epubReader.next()
