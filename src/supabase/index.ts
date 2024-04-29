@@ -1,3 +1,3 @@
-import supabase from './initialize'
+import SupaStorage from './storage'
 
-export { supabase }
+export { SupaStorage }
