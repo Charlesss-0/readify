@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<BookContextProvider>
-			<html lang="en">
+			<html lang="en" data-theme="retro">
 				<Head>
 					<meta charSet="UTF-8" />
 					<meta name="viewport" content="width=device-width, initial-scale=1.0" />

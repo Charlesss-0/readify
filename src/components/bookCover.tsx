@@ -1,5 +1,5 @@
-import { FireDatabase, FireStorage } from '@/firebase'
-
+import { EpubReader } from '@/lib'
+import { FireStorage } from '@/firebase'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useBookContext } from '@/context/bookContext'
@@ -17,16 +17,18 @@ const Cover = styled.div`
 
 export default function BookCover() {
 	const fireStorage = new FireStorage()
-	const { epubReader, book, setBook } = useBookContext()
+	const epubReader = new EpubReader()
+	const { book, setBook } = useBookContext()
 
 	useEffect(() => {
-		const loadBookCover = async () => {
+		const displayBooks = async () => {
 			try {
 				const books = await fireStorage.getList()
 
 				const bookData = await Promise.all(
 					books.map(async url => {
 						await epubReader.renderBook(url)
+
 						const cover = epubReader.getBookCover()
 						const title = epubReader.getBookTitle()
 
@@ -39,11 +41,11 @@ export default function BookCover() {
 				console.error('Error loading book:', e.message)
 			}
 		}
-		loadBookCover()
+		displayBooks()
 	}, [])
 
 	const handleAdd = (url: string) => {
-		localStorage.setItem('bookUrl', url)
+		localStorage.setItem('book', url)
 	}
 
 	return (
@@ -51,11 +53,7 @@ export default function BookCover() {
 			{book && (
 				<>
 					{book.map(book => (
-						<Link
-							key={book.url}
-							href={`/book/${book.title.replace(/\s+/g, '')}`}
-							onClick={() => handleAdd(book.url)}
-						>
+						<Link key={book.url} href="book" onClick={() => handleAdd(book.url)}>
 							<Cover
 								style={{
 									backgroundImage: `url('${book.cover}')`,

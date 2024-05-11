@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import { FireDatabase } from '@/firebase'
+import { EpubReader } from '@/lib'
 import styled from 'styled-components'
-import { useBookContext } from '@/context/bookContext'
 
 const BookView = styled.div`
 	background-color: #f8f6e3;
@@ -47,24 +46,31 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const { epubReader } = useBookContext()
+	const epubReader = new EpubReader()
 	const viewerRef = useRef<HTMLDivElement>(null)
-	const bookURL = localStorage.getItem('bookUrl')
+	const bookURL = typeof window !== 'undefined' ? localStorage.getItem('book') : null
 
 	useEffect(() => {
-		const loadBook = async () => {
-			if (bookURL) {
-				await epubReader.renderBook(bookURL)
-			}
+		const displayBook = async () => {
+			try {
+				if (bookURL) {
+					await epubReader.renderBook(bookURL)
+					console.log(bookURL)
 
-			if (viewerRef.current) {
-				if (viewerRef.current !== epubReader.getViewerRef()?.current) {
-					epubReader.setViewerRef(viewerRef)
+					if (viewerRef.current) {
+						if (viewerRef.current !== epubReader.getViewerRef()?.current) {
+							epubReader.setViewerRef(viewerRef)
+						}
+					}
+				} else {
+					console.log('No book url was found!')
 				}
+			} catch (e) {
+				console.error(e)
 			}
 		}
-		loadBook()
-	}, [bookURL])
+		displayBook()
+	}, [])
 
 	useEffect(() => {
 		const onKeyDown = async (e: KeyboardEvent) => {
