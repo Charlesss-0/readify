@@ -1,6 +1,6 @@
 import './globals.css'
 
-import { BookContextProvider } from '@/context/bookContext'
+import { BookContextProvider } from '@/src/context/bookContext'
 import Head from 'next/head'
 import { Metadata } from 'next'
 
