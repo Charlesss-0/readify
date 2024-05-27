@@ -1,8 +1,8 @@
-import { EpubReader } from '@/lib'
-import { FireStorage } from '@/firebase'
+import { EpubReader } from '@/src/lib'
+import { FireStorage } from '@/src/firebase'
 import Link from 'next/link'
 import styled from 'styled-components'
-import { useBookContext } from '@/context/bookContext'
+import { useBookContext } from '@/src/context/bookContext'
 import { useEffect } from 'react'
 
 const Cover = styled.div`
@@ -53,7 +53,11 @@ export default function BookCover() {
 			{book && (
 				<>
 					{book.map(book => (
-						<Link key={book.url} href="book" onClick={() => handleAdd(book.url)}>
+						<Link
+							key={book.url}
+							href={`/book/${book.title}`}
+							onClick={() => handleAdd(book.url)}
+						>
 							<Cover
 								style={{
 									backgroundImage: `url('${book.cover}')`,

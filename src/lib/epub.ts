@@ -1,6 +1,5 @@
+import Epub, { Book } from 'epubjs'
 import React, { createRef } from 'react'
-
-import Epub from 'epubjs'
 
 export default class EpubReader {
 	private viewerRef = createRef<HTMLDivElement>()
@@ -22,13 +21,18 @@ export default class EpubReader {
 		this.getBookTitle = this.getBookTitle.bind(this)
 	}
 
-	public async renderBook(file: string): Promise<void> {
+	public async renderBook(bookURL: string): Promise<void> {
 		try {
-			const book = Epub(file)
+			if (!bookURL) {
+				console.error('No book URL specified')
+				return
+			}
+
+			const book: Book = Epub(bookURL)
 			await book.ready
 
-			const cover = (await book.coverUrl()) as string
-			const title = book.packaging.metadata.title
+			const cover: string = (await book.coverUrl()) as string
+			const title: string = book.packaging.metadata.title
 
 			this.bookCover = cover
 			this.bookTitle = title

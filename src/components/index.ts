@@ -1,5 +1,5 @@
-import Add from './addBtn'
 import BookCover from './bookCover'
 import Bookshelf from './bookshelf'
+import UploadBtn from './upload'
 
-export { BookCover, Add, Bookshelf }
+export { BookCover, UploadBtn, Bookshelf }

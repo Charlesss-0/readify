@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
-import { EpubReader } from '@/lib'
+import { EpubReader } from '@/src/lib'
 import styled from 'styled-components'
 
 const BookView = styled.div`
@@ -40,7 +40,7 @@ const BtnContainer = styled.div`
 const Button = styled.button`
 	color: #2f2f2f;
 	font-size: 2.5rem;
-	margin: 2rem;
+	margin: 0.5rem;
 
 	z-index: 1;
 `
@@ -55,7 +55,6 @@ export default function Book() {
 			try {
 				if (bookURL) {
 					await epubReader.renderBook(bookURL)
-					console.log(bookURL)
 
 					if (viewerRef.current) {
 						if (viewerRef.current !== epubReader.getViewerRef()?.current) {

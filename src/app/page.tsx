@@ -1,27 +1,46 @@
 'use client'
 
-import { Add, Bookshelf } from '@/components'
+import { Bookshelf, UploadBtn } from '@/src/components'
+import React, { useEffect, useState } from 'react'
 
-import React from 'react'
+interface S3File {
+	Key: string
+	LastModified: string
+	Size: number
+}
 
 export default function Home() {
-	const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0]
-		if (file) {
-			try {
-				console.log('Hello')
-			} catch (e: any) {
-				console.error('Error uploading file:', e)
+	const [files, setFiles] = useState<S3File[]>([])
+
+	const fetchFiles = async () => {
+		try {
+			const response = await fetch('api/documents')
+
+			if (!response.ok) {
+				console.error('Failed to fetch files')
 			}
+
+			const result = await response.json()
+			setFiles(result)
+		} catch (e: any) {
+			console.error('Error fetching files', e)
 		}
 	}
+
+	useEffect(() => {
+		fetchFiles()
+	}, [])
+
+	useEffect(() => {
+		console.log(files)
+	}, [files])
 
 	return (
 		<main className="min-h-screen p-[1rem]">
 			<h1 className="text-[2rem] font-bold p-[1rem] text-center">My Library</h1>
 			<Bookshelf />
 
-			<Add onFileChange={onFileChange} />
+			<UploadBtn />
 		</main>
 	)
 }

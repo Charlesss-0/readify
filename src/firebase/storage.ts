@@ -1,4 +1,10 @@
-import { getDownloadURL, getStorage, listAll, ref, uploadBytesResumable } from 'firebase/storage'
+import {
+	getDownloadURL,
+	getStorage,
+	listAll,
+	ref,
+	uploadBytesResumable,
+} from 'firebase/storage'
 
 import Initialize from './initialize'
 
@@ -35,11 +41,11 @@ export default class FireStorage extends Initialize {
 		const listRef = ref(this.storage, 'books/')
 
 		try {
-			const items = await listAll(listRef)
+			const books = await listAll(listRef)
 			const fileUrls: string[] = []
 
 			await Promise.all(
-				items.items.map(async item => {
+				books.items.map(async item => {
 					const url = await getDownloadURL(item)
 					fileUrls.push(url)
 				})
