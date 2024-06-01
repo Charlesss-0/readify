@@ -1,5 +1,4 @@
 import { EpubReader } from '@/src/lib'
-import { FireStorage } from '@/src/firebase'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useBookContext } from '@/src/context/bookContext'
@@ -16,32 +15,36 @@ const Cover = styled.div`
 `
 
 export default function BookCover() {
-	const fireStorage = new FireStorage()
 	const epubReader = new EpubReader()
 	const { book, setBook } = useBookContext()
 
-	useEffect(() => {
-		const displayBooks = async () => {
-			try {
-				const books = await fireStorage.getList()
-
-				const bookData = await Promise.all(
-					books.map(async url => {
-						await epubReader.renderBook(url)
-
-						const cover = epubReader.getBookCover()
-						const title = epubReader.getBookTitle()
-
-						return { url: url, cover: cover, title: title, id: url }
-					})
-				)
-
-				setBook(bookData)
-			} catch (e: any) {
-				console.error('Error loading book:', e.message)
+	const fetchBooks = async () => {
+		try {
+			const response = await fetch('api/books')
+			if (!response.ok) {
+				console.error('Failed to fetch books', response)
 			}
+			const data = await response.json()
+
+			const bookData = await Promise.all(
+				data.map(async (book: any) => {
+					await epubReader.renderBook(book.Url)
+					const cover = epubReader.getBookCover()
+					const title = epubReader.getBookTitle()
+
+					return { url: book.Url, cover, title, id: book.Key }
+				})
+			)
+
+			setBook(bookData)
+			console.log(data)
+		} catch (error: any) {
+			console.error('Failed to load book', error)
 		}
-		displayBooks()
+	}
+
+	useEffect(() => {
+		fetchBooks()
 	}, [])
 
 	const handleAdd = (url: string) => {

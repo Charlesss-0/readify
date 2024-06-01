@@ -46,34 +46,32 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const epubReader = new EpubReader()
+	const epubReader = useRef(new EpubReader())
 	const viewerRef = useRef<HTMLDivElement>(null)
 	const bookURL = typeof window !== 'undefined' ? localStorage.getItem('book') : null
 
-	useEffect(() => {
-		const displayBook = async () => {
-			try {
-				if (bookURL) {
-					await epubReader.renderBook(bookURL)
+	const displayBook = async () => {
+		try {
+			if (bookURL) {
+				await epubReader.current.renderBook(bookURL)
 
-					if (viewerRef.current) {
-						if (viewerRef.current !== epubReader.getViewerRef()?.current) {
-							epubReader.setViewerRef(viewerRef)
-						}
+				if (viewerRef.current) {
+					if (viewerRef.current !== epubReader.current.getViewerRef()?.current) {
+						epubReader.current.setViewerRef(viewerRef)
 					}
-				} else {
-					console.log('No book url was found!')
 				}
-			} catch (e) {
-				console.error(e)
+			} else {
+				console.log('No book url was found!')
 			}
+		} catch (e) {
+			console.error(e)
 		}
-		displayBook()
-	}, [])
+	}
 
 	useEffect(() => {
+		displayBook()
 		const onKeyDown = async (e: KeyboardEvent) => {
-			epubReader.onKeyDown(e)
+			epubReader.current.onKeyDown(e)
 		}
 
 		window.addEventListener('keydown', onKeyDown)
@@ -81,14 +79,14 @@ export default function Book() {
 		return () => {
 			window.removeEventListener('keydown', onKeyDown)
 		}
-	}, [])
+	}, [bookURL])
 
 	const onNext = async () => {
-		await epubReader.next()
+		await epubReader.current.next()
 	}
 
 	const onPrevious = async () => {
-		await epubReader.previous()
+		await epubReader.current.previous()
 	}
 
 	return (

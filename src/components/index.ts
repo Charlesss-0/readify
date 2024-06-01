@@ -1,5 +1,5 @@
 import BookCover from './bookCover'
 import Bookshelf from './bookshelf'
-import UploadBtn from './upload'
+import UploadBtn from './uploadBtn'
 
 export { BookCover, UploadBtn, Bookshelf }

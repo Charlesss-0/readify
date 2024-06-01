@@ -11,7 +11,7 @@ export default function UploadBtn(): React.ReactElement {
 			formData.append('file', file)
 
 			try {
-				const response = await fetch('api/documents', {
+				const response = await fetch('api/books', {
 					method: 'POST',
 					body: formData,
 				})

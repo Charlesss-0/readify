@@ -28,7 +28,9 @@ export default class EpubReader {
 				return
 			}
 
-			const book: Book = Epub(bookURL)
+			const book: Book = Epub(bookURL, {
+				requestHeaders: { 'Access-Control-Allow-Origin': '*' },
+			})
 			await book.ready
 
 			const cover: string = (await book.coverUrl()) as string
