@@ -16,7 +16,7 @@ export async function GET() {
 		const response = await s3.send(new ListObjectsCommand({ Bucket }))
 		const contents = response?.Contents ?? []
 
-		const publicUrls = await Promise.all(
+		const signedUrls = await Promise.all(
 			contents.map(async (item: any) => {
 				const command = new GetObjectCommand({
 					Bucket,
@@ -38,8 +38,8 @@ export async function GET() {
 			})
 		)
 
-		const res = NextResponse.json(publicUrls)
-		res.headers.set('Access-Control-Allow-Origin', '*')
+		const res = NextResponse.json(signedUrls)
+		res.headers.set('Access-Control-Allow-Origin', '')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
 

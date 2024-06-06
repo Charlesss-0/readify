@@ -37,6 +37,7 @@ export default class EpubReader {
 			const bufferURL = await blob.arrayBuffer()
 
 			const book = Epub(bufferURL, {
+				requestHeaders: { 'Access-Control-Allow-Origin': '*' },
 				openAs: 'binary',
 			})
 
