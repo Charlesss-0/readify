@@ -18,7 +18,7 @@ export default function BookCover() {
 	const epubReader = new EpubReader()
 	const { book, setBook } = useBookContext()
 
-	const fetchBooks = async () => {
+	async function fetchBooks() {
 		try {
 			const response = await fetch('api/books')
 			if (!response.ok) {
@@ -37,7 +37,6 @@ export default function BookCover() {
 			)
 
 			setBook(bookData)
-			console.log(data)
 		} catch (error: any) {
 			console.error('Failed to load book', error)
 		}
@@ -47,8 +46,8 @@ export default function BookCover() {
 		fetchBooks()
 	}, [])
 
-	const handleAdd = (url: string) => {
-		localStorage.setItem('book', url)
+	const handleAdd = (id: string) => {
+		localStorage.setItem('bookId', id)
 	}
 
 	return (
@@ -56,11 +55,7 @@ export default function BookCover() {
 			{book && (
 				<>
 					{book.map(book => (
-						<Link
-							key={book.url}
-							href={`/book/${book.title}`}
-							onClick={() => handleAdd(book.url)}
-						>
+						<Link key={book.url} href="/book" onClick={() => handleAdd(book.id)}>
 							<Cover
 								style={{
 									backgroundImage: `url('${book.cover}')`,

@@ -2,7 +2,21 @@
 
 import React, { createContext, useContext, useState } from 'react'
 
+import { EpubReader } from '../lib'
+
+interface BookReaderType {
+	renderBook: (bookURL: string) => Promise<void>
+	onKeyDown: (e: KeyboardEvent) => void
+	next: () => Promise<void>
+	previous: () => Promise<void>
+	getBookTitle: () => string
+	getBookCover: () => string
+	setViewerRef: (ref: React.RefObject<HTMLDivElement>) => void
+	getViewerRef: () => React.RefObject<HTMLDivElement>
+}
+
 interface BookContextValue {
+	epubReader: BookReaderType
 	book: Book[]
 	setBook: React.Dispatch<React.SetStateAction<Book[]>>
 	bookURL: string
@@ -12,10 +26,12 @@ interface BookContextValue {
 const BookContext = createContext<BookContextValue | null>(null)
 
 export function BookContextProvider({ children }: { children: React.ReactNode }) {
+	const epubReader = new EpubReader()
 	const [book, setBook] = useState<Book[]>([])
 	const [bookURL, setBookURL] = useState<string>('')
 
 	const contextValue = {
+		epubReader,
 		book,
 		setBook,
 		bookURL,

@@ -28,9 +28,18 @@ export default class EpubReader {
 				return
 			}
 
-			const book: Book = Epub(bookURL, {
-				requestHeaders: { 'Access-Control-Allow-Origin': '*' },
+			const response = await fetch(bookURL)
+			if (!response.ok) {
+				console.error('Failed to fetch book:', response.statusText)
+				return
+			}
+			const blob = await response.blob()
+			const bufferURL = await blob.arrayBuffer()
+
+			const book = Epub(bufferURL, {
+				openAs: 'binary',
 			})
+
 			await book.ready
 
 			const cover: string = (await book.coverUrl()) as string

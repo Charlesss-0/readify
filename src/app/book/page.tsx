@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import { EpubReader } from '@/src/lib'
 import styled from 'styled-components'
+import { useBookContext } from '@/src/context/bookContext'
 
 const BookView = styled.div`
 	background-color: #f8f6e3;
@@ -46,32 +46,48 @@ const Button = styled.button`
 `
 
 export default function Book() {
-	const epubReader = useRef(new EpubReader())
+	const { epubReader } = useBookContext()
 	const viewerRef = useRef<HTMLDivElement>(null)
-	const bookURL = typeof window !== 'undefined' ? localStorage.getItem('book') : null
-
-	const displayBook = async () => {
-		try {
-			if (bookURL) {
-				await epubReader.current.renderBook(bookURL)
-
-				if (viewerRef.current) {
-					if (viewerRef.current !== epubReader.current.getViewerRef()?.current) {
-						epubReader.current.setViewerRef(viewerRef)
-					}
-				}
-			} else {
-				console.log('No book url was found!')
-			}
-		} catch (e) {
-			console.error(e)
-		}
-	}
+	const [bookURL, setBookURL] = useState<string>('')
 
 	useEffect(() => {
-		displayBook()
+		const bookId = localStorage.getItem('bookId')
+
+		if (bookId) {
+			const fetchBooks = async () => {
+				try {
+					if (bookURL) {
+						await epubReader.renderBook(bookURL)
+
+						if (viewerRef.current !== epubReader.getViewerRef()?.current) {
+							epubReader.setViewerRef(viewerRef)
+						}
+					}
+
+					const response = await fetch('api/books')
+					if (!response.ok) {
+						console.error('Failed to fetch books', response)
+						return
+					}
+					const data = await response.json()
+
+					const book = data.find((b: any) => bookId === b.Key)
+					if (!book) {
+						console.error('No matching book found')
+						return
+					}
+					setBookURL(book.Url)
+				} catch (error: any) {
+					console.error('Error fetching book url: ', error)
+				}
+			}
+			fetchBooks()
+		}
+	}, [bookURL])
+
+	useEffect(() => {
 		const onKeyDown = async (e: KeyboardEvent) => {
-			epubReader.current.onKeyDown(e)
+			epubReader.onKeyDown(e)
 		}
 
 		window.addEventListener('keydown', onKeyDown)
@@ -79,14 +95,14 @@ export default function Book() {
 		return () => {
 			window.removeEventListener('keydown', onKeyDown)
 		}
-	}, [bookURL])
+	}, [])
 
 	const onNext = async () => {
-		await epubReader.current.next()
+		await epubReader.next()
 	}
 
 	const onPrevious = async () => {
-		await epubReader.current.previous()
+		await epubReader.previous()
 	}
 
 	return (
