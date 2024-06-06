@@ -20,7 +20,7 @@ export default function BookCover() {
 
 	async function fetchBooks() {
 		try {
-			const response = await fetch('api/books')
+			const response = await fetch('/api/books')
 			if (!response.ok) {
 				console.error('Failed to fetch books', response)
 			}

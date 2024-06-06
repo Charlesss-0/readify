@@ -64,7 +64,7 @@ export default function Book() {
 						}
 					}
 
-					const response = await fetch('api/books')
+					const response = await fetch('/api/books')
 					if (!response.ok) {
 						console.error('Failed to fetch books', response)
 						return
