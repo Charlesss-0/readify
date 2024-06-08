@@ -6,13 +6,8 @@ import { EpubReader } from '../lib'
 
 interface BookReaderType {
 	renderBook: (bookURL: string) => Promise<void>
-	onKeyDown: (e: KeyboardEvent) => void
-	next: () => Promise<void>
-	previous: () => Promise<void>
 	getBookTitle: () => string
 	getBookCover: () => string
-	setViewerRef: (ref: React.RefObject<HTMLDivElement>) => void
-	getViewerRef: () => React.RefObject<HTMLDivElement>
 }
 
 interface BookContextValue {

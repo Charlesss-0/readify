@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 
+import { FaFileCirclePlus } from 'react-icons/fa6'
+
 export default function UploadBtn(): React.ReactElement {
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -11,17 +13,14 @@ export default function UploadBtn(): React.ReactElement {
 			formData.append('file', file)
 
 			try {
-				const response = await fetch('api/books', {
+				const response = await fetch('/api/books', {
 					method: 'POST',
 					body: formData,
 				})
-
 				if (!response.ok) {
 					console.error('Failed to upload file')
 				}
-
-				const result = await response.json()
-				console.log('File uploaded successfully', result)
+				await response.json()
 			} catch (e: any) {
 				console.error('Error uploading file', e)
 			}
@@ -43,7 +42,7 @@ export default function UploadBtn(): React.ReactElement {
 				onClick={() => inputRef.current?.click()}
 				className="text-[3rem] m-[1rem]"
 			>
-				<i className="fi fi-rr-add"></i>
+				<FaFileCirclePlus />
 			</button>
 		</div>
 	)

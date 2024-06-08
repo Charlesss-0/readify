@@ -1,10 +1,8 @@
 import {
 	GetObjectCommand,
 	ListObjectsCommand,
-	ObjectCannedACL,
 	PutObjectCommand,
 } from '@aws-sdk/client-s3'
-import { NextRequest, NextResponse } from 'next/server'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import s3 from '@/server/config/aws-config'
@@ -38,7 +36,7 @@ export async function GET() {
 			})
 		)
 
-		const res = NextResponse.json(signedUrls)
+		const res = Response.json(signedUrls)
 		res.headers.set('Access-Control-Allow-Origin', '')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
@@ -46,27 +44,27 @@ export async function GET() {
 		return res
 	} catch (error: any) {
 		console.error('Error fetching from S3:', error)
-		return NextResponse.json({ error: error.message }, { status: 500 })
+		return Response.json({ error: error.message }, { status: 500 })
 	}
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
 	try {
 		const formData = await req.formData()
 		const file = formData.get('file') as File
 
 		if (!file) {
-			return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+			return Response.json({ error: 'No file provided' }, { status: 400 })
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
 		const Key = `${Date.now().toString()}-${file.name}`
 
-		const uploadParams = { Bucket, Key, Body, ACL: 'public-read' as ObjectCannedACL }
+		const uploadParams = { Bucket, Key, Body }
 
 		const data = await s3.send(new PutObjectCommand(uploadParams))
 
-		const res = NextResponse.json({ message: 'File uploaded successfully', data })
+		const res = Response.json({ message: 'File uploaded successfully', data })
 		res.headers.set('Access-Control-Allow-Origin', '*')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
@@ -74,6 +72,6 @@ export async function POST(req: NextRequest) {
 		return res
 	} catch (e: any) {
 		console.error('Error uploading file', e)
-		return NextResponse.json({ message: e.message }, { status: 500 })
+		return Response.json({ message: e.message }, { status: 500 })
 	}
 }

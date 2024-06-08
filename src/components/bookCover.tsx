@@ -18,31 +18,35 @@ export default function BookCover() {
 	const epubReader = new EpubReader()
 	const { book, setBook } = useBookContext()
 
-	async function fetchBooks() {
-		try {
-			const response = await fetch('/api/books')
-			if (!response.ok) {
-				console.error('Failed to fetch books', response)
-			}
-			const data = await response.json()
-
-			const bookData = await Promise.all(
-				data.map(async (book: any) => {
-					await epubReader.renderBook(book.Url)
-					const cover = epubReader.getBookCover()
-					const title = epubReader.getBookTitle()
-
-					return { url: book.Url, cover, title, id: book.Key }
-				})
-			)
-
-			setBook(bookData)
-		} catch (error: any) {
-			console.error('Failed to load book', error)
-		}
-	}
-
 	useEffect(() => {
+		const fetchBooks = async () => {
+			try {
+				const response = await fetch('/api/books')
+				if (!response.ok) {
+					console.error('Failed to fetch books', response)
+				}
+				const data = await response.json()
+
+				const books = await Promise.all(
+					data.map(async (book: any) => {
+						await epubReader.renderBook(book.Url)
+
+						const cover = epubReader.getBookCover()
+						const title = epubReader.getBookTitle()
+
+						return { url: book.Url, cover, title, id: book.Key }
+					})
+				)
+				if (!books) {
+					console.error('No books found')
+					return
+				}
+
+				setBook(books)
+			} catch (error: any) {
+				console.error('Failed to load books', error)
+			}
+		}
 		fetchBooks()
 	}, [])
 
@@ -55,7 +59,11 @@ export default function BookCover() {
 			{book && (
 				<>
 					{book.map(book => (
-						<Link key={book.url} href="/book" onClick={() => handleAdd(book.id)}>
+						<Link
+							key={book.id}
+							href={`/book/${book.title.replace(/\s+/g, '_')}`}
+							onClick={() => handleAdd(book.id)}
+						>
 							<Cover
 								style={{
 									backgroundImage: `url('${book.cover}')`,
