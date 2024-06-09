@@ -8,10 +8,10 @@ import useLocalStorageState from 'use-local-storage-state'
 
 export default function Book() {
 	const [bookURL, setBookURL] = useState<string>('')
-	const [location, setLocation] = useLocalStorageState<string | number>(
+	const [location, setLocation] = useLocalStorageState<string | number | null>(
 		'current-book-location',
 		{
-			defaultValue: 0,
+			defaultValue: null,
 		}
 	)
 	const rendition = useRef<Rendition | undefined>(undefined)
@@ -42,6 +42,15 @@ export default function Book() {
 			fetchBooks()
 		}
 	}, [bookURL])
+
+	useEffect(() => {
+		if (rendition.current && location === null) {
+			rendition.current.display().then(() => {
+				const initialLocation = rendition.current?.location.start.index
+				setLocation(initialLocation!)
+			})
+		}
+	}, [location])
 
 	return (
 		<>

@@ -3,6 +3,7 @@ import {
 	ListObjectsCommand,
 	PutObjectCommand,
 } from '@aws-sdk/client-s3'
+import { NextRequest, NextResponse } from 'next/server'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import s3 from '@/server/config/aws-config'
@@ -36,25 +37,25 @@ export async function GET() {
 			})
 		)
 
-		const res = Response.json(signedUrls)
-		res.headers.set('Access-Control-Allow-Origin', '')
+		const res = NextResponse.json(signedUrls)
+		res.headers.set('Access-Control-Allow-Origin', '*')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
 
 		return res
 	} catch (error: any) {
 		console.error('Error fetching from S3:', error)
-		return Response.json({ error: error.message }, { status: 500 })
+		return NextResponse.json({ error: error.message }, { status: 500 })
 	}
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
 	try {
 		const formData = await req.formData()
 		const file = formData.get('file') as File
 
 		if (!file) {
-			return Response.json({ error: 'No file provided' }, { status: 400 })
+			return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
 
 		const data = await s3.send(new PutObjectCommand(uploadParams))
 
-		const res = Response.json({ message: 'File uploaded successfully', data })
+		const res = NextResponse.json({ message: 'File uploaded successfully', data })
 		res.headers.set('Access-Control-Allow-Origin', '*')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
@@ -72,6 +73,6 @@ export async function POST(req: Request) {
 		return res
 	} catch (e: any) {
 		console.error('Error uploading file', e)
-		return Response.json({ message: e.message }, { status: 500 })
+		return NextResponse.json({ message: e.message }, { status: 500 })
 	}
 }

@@ -7,23 +7,30 @@ export default function UploadBtn(): React.ReactElement {
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
+		if (!file) {
+			console.error('No file provided!')
+			return
+		}
+		if (file.type !== 'application/epub+zip') {
+			console.error('Only epub files are allowed')
+			alert('Only epub files are allowed')
+			return
+		}
 
-		if (file) {
-			const formData = new FormData()
-			formData.append('file', file)
+		const formData = new FormData()
+		formData.append('file', file)
 
-			try {
-				const response = await fetch('/api/books', {
-					method: 'POST',
-					body: formData,
-				})
-				if (!response.ok) {
-					console.error('Failed to upload file')
-				}
-				await response.json()
-			} catch (e: any) {
-				console.error('Error uploading file', e)
+		try {
+			const response = await fetch('/api/books', {
+				method: 'POST',
+				body: formData,
+			})
+			if (!response.ok) {
+				console.error('Failed to upload file')
 			}
+			await response.json()
+		} catch (e: any) {
+			console.error('Error uploading file', e)
 		}
 	}
 
@@ -33,7 +40,6 @@ export default function UploadBtn(): React.ReactElement {
 				ref={inputRef}
 				id="file"
 				type="file"
-				accept=".epub"
 				onChange={handleFileChange}
 				className="m-[1rem] hidden"
 			/>

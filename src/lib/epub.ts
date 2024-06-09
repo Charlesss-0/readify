@@ -3,7 +3,7 @@ import Epub from 'epubjs'
 
 // import { RenditionOptions } from 'epubjs/types/rendition'
 
-export default class EpubReader {
+export default class Reader {
 	private bookTitle: string = ''
 	private bookCover: string = ''
 	// private viewerRef = createRef<HTMLDivElement>()

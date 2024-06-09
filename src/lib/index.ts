@@ -1,3 +1,3 @@
-import EpubReader from './epub'
+import Reader from './epub'
 
-export { EpubReader }
+export { Reader }
