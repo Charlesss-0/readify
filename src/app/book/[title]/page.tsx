@@ -22,7 +22,7 @@ export default function Book() {
 		let fontSize
 
 		if (screenWidth < 600) {
-			fontSize = '90%'
+			fontSize = '80%'
 		} else if (screenWidth >= 600 && screenWidth <= 900) {
 			fontSize = '120%'
 		} else {
@@ -70,7 +70,7 @@ export default function Book() {
 					}}
 					getRendition={(_rendition: Rendition) => {
 						rendition.current = _rendition
-						rendition.current.themes.fontSize('120%')
+						setFontSize()
 						_rendition.hooks.content.register((contents: Contents) => {
 							// @ts-ignore - manager type is missing in epubjs Rendition
 							_rendition.manager.container.style['scroll-behavior'] = 'smooth'
