@@ -4,6 +4,7 @@ import type { Contents, Rendition } from 'epubjs'
 import { useEffect, useRef, useState } from 'react'
 
 import { ReactReader } from 'react-reader'
+import { findSelectedBook } from '@/src/utils'
 import useLocalStorageState from 'use-local-storage-state'
 
 export default function Book() {
@@ -16,31 +17,28 @@ export default function Book() {
 	)
 	const rendition = useRef<Rendition | undefined>(undefined)
 
+	const setFontSize = () => {
+		const screenWidth = window.innerWidth
+		let fontSize
+
+		if (screenWidth < 600) {
+			fontSize = '90%'
+		} else if (screenWidth >= 600 && screenWidth <= 900) {
+			fontSize = '120%'
+		} else {
+			fontSize = '140%'
+		}
+
+		rendition.current?.themes.fontSize(fontSize)
+	}
+
 	useEffect(() => {
 		const bookId = localStorage.getItem('bookId')
-
-		if (bookId) {
-			const fetchBooks = async () => {
-				try {
-					const response = await fetch('/api/books')
-					if (!response.ok) {
-						console.error('Failed to fetch books', response)
-						return
-					}
-					const data = await response.json()
-
-					const book = data.find((b: any) => bookId === b.Key)
-					if (!book) {
-						console.error('No matching book found')
-						return
-					}
-					setBookURL(book.Url)
-				} catch (error: any) {
-					console.error('Error fetching book url: ', error)
-				}
-			}
-			fetchBooks()
+		if (!bookId) {
+			console.error('No book id has been defined')
+			return
 		}
+		findSelectedBook(bookId, setBookURL)
 	}, [bookURL])
 
 	useEffect(() => {
@@ -51,6 +49,13 @@ export default function Book() {
 			})
 		}
 	}, [location])
+
+	useEffect(() => {
+		setFontSize()
+		window.addEventListener('resize', setFontSize)
+
+		return () => window.removeEventListener('resize', setFontSize)
+	}, [])
 
 	return (
 		<>

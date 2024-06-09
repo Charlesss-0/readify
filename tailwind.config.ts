@@ -10,8 +10,8 @@ const config: Config = {
 		extend: {
 			screens: {
 				xl: { max: '1279px' },
-				lg: { max: '1023px' },
-				md: { max: '800px' },
+				lg: { max: '900px' },
+				md: { max: '600px' },
 				sm: { max: '400px' },
 			},
 		},

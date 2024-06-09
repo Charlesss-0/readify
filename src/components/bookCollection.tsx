@@ -8,8 +8,6 @@ const Cover = styled.div`
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
-	width: 180px;
-	height: 280px;
 	border-radius: 0.5rem;
 	box-shadow: 1px 1px 1rem 0 #000a;
 `
@@ -37,7 +35,7 @@ export default function BookCover() {
 							onClick={() => handleAdd(book.id)}
 						>
 							<Cover
-								className=""
+								className="w-[260px] h-[400px] md:w-[140px] md:h-[210px]"
 								style={{
 									backgroundImage: `url('${book.cover}')`,
 								}}
