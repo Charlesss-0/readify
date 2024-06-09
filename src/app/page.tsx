@@ -1,13 +1,13 @@
 'use client'
 
-import { BookCover, Bookshelf, UploadBtn } from '@/src/components'
+import { BookCollection, UploadBtn } from '@/src/components'
 
 import React from 'react'
 
 export default function Home() {
 	return (
-		<main className="min-h-screen p-[1rem]">
-			<BookCover />
+		<main className="h-screen">
+			<BookCollection />
 
 			<UploadBtn />
 		</main>

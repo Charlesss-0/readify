@@ -46,9 +46,9 @@ export default function UploadBtn(): React.ReactElement {
 			<button
 				type="button"
 				onClick={() => inputRef.current?.click()}
-				className="text-[3rem] m-[1rem]"
+				className="btn btn-neutral sm:btn-sm md:btn-md"
 			>
-				<FaFileCirclePlus />
+				Upload Book
 			</button>
 		</div>
 	)

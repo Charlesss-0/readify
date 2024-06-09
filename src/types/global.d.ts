@@ -13,3 +13,9 @@ interface S3File {
 	StorageClass: string
 	Url: string
 }
+
+interface BookReader {
+	renderBook: (bookURL: string) => Promise<void>
+	getBookTitle: () => string
+	getBookCover: () => string
+}

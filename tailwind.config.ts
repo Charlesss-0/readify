@@ -8,16 +8,17 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
-			backgroundImage: {
-				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'gradient-conic':
-					'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+			screens: {
+				xl: { max: '1279px' },
+				lg: { max: '1023px' },
+				md: { max: '800px' },
+				sm: { max: '400px' },
 			},
 		},
 	},
 	plugins: [require('daisyui')],
 	daisyui: {
-		themes: ['retro'],
+		themes: ['retro', 'sunset', 'cupcake', 'forest'],
 	},
 }
 export default config

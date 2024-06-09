@@ -4,14 +4,8 @@ import React, { createContext, useContext, useState } from 'react'
 
 import { Reader } from '../lib'
 
-interface BookReaderType {
-	renderBook: (bookURL: string) => Promise<void>
-	getBookTitle: () => string
-	getBookCover: () => string
-}
-
 interface BookContextValue {
-	reader: BookReaderType
+	reader: BookReader
 	book: Book[]
 	setBook: React.Dispatch<React.SetStateAction<Book[]>>
 	bookURL: string
