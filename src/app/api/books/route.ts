@@ -3,20 +3,34 @@ import {
 	ListObjectsCommand,
 	PutObjectCommand,
 } from '@aws-sdk/client-s3'
-import { NextRequest, NextResponse } from 'next/server'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import s3 from '@/server/config/aws-config'
+import s3 from '@/server/config/awsConfig'
 
 const Bucket = process.env.S3_BUCKET_NAME as string
 
-export async function GET() {
+export async function GET(req: Request) {
 	try {
+		const url = new URL(req.url)
+		const userUid = url.searchParams.get('userUid')
+
+		if (!userUid) {
+			return Response.json({ message: 'No user UID provided' }, { status: 400 })
+		}
+
 		const response = await s3.send(new ListObjectsCommand({ Bucket }))
 		const contents = response?.Contents ?? []
 
+		const userObjects = contents.filter((item: any) => item.Key.startsWith(`${userUid}/`))
+		if (!userObjects || userObjects.length === 0) {
+			return Response.json(
+				{ message: 'No matching user objects found!' },
+				{ status: 404 }
+			)
+		}
+
 		const signedUrls = await Promise.all(
-			contents.map(async (item: any) => {
+			userObjects.map(async (item: any) => {
 				const command = new GetObjectCommand({
 					Bucket,
 					Key: item.Key,
@@ -37,42 +51,45 @@ export async function GET() {
 			})
 		)
 
-		const res = NextResponse.json(signedUrls)
+		const res = Response.json(signedUrls)
 		res.headers.set('Access-Control-Allow-Origin', '*')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
 
 		return res
 	} catch (error: any) {
-		console.error('Error fetching from S3:', error)
-		return NextResponse.json({ error: error.message }, { status: 500 })
+		return Response.json({ message: error.message }, { status: 500 })
 	}
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
 	try {
 		const formData = await req.formData()
 		const file = formData.get('file') as File
+		const userUid = formData.get('userUid') as string
 
 		if (!file) {
-			return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+			return Response.json({ error: 'No file provided' }, { status: 400 })
+		}
+
+		if (!userUid) {
+			return Response.json({ error: 'No user uid provided' }, { status: 400 })
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
-		const Key = `${Date.now().toString()}-${file.name}`
+		const Key = `${userUid}/${Date.now().toString()}-${file.name}`
 
 		const uploadParams = { Bucket, Key, Body }
 
 		const data = await s3.send(new PutObjectCommand(uploadParams))
 
-		const res = NextResponse.json({ message: 'File uploaded successfully', data })
+		const res = Response.json({ message: 'File uploaded successfully', data })
 		res.headers.set('Access-Control-Allow-Origin', '*')
 		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
 		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
 
 		return res
-	} catch (e: any) {
-		console.error('Error uploading file', e)
-		return NextResponse.json({ message: e.message }, { status: 500 })
+	} catch (error: any) {
+		return Response.json({ message: error.message }, { status: 500 })
 	}
 }

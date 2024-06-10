@@ -1,16 +1,27 @@
+import React from 'react'
+
 // fetch book collection to be rendered on the home page
-export const fetchBooks = async (
+export const fetchBookCollection = async (
 	reader: BookReader,
 	setBook: React.Dispatch<React.SetStateAction<Book[]>>
 ) => {
+	const userUid = localStorage.getItem('userUid')
+	if (!userUid) {
+		console.error('Sign in to see your books')
+		return
+	}
+
 	try {
-		const response = await fetch('/api/books')
+		const response = await fetch(`/api/books?userUid=${userUid}`, {
+			method: 'GET',
+		})
 		if (!response.ok) {
 			console.error('Failed to fetch books', response)
 			return
 		}
 		const data = await response.json()
 
+		// map data to return specific book metadata
 		const books = await Promise.all(
 			data.map(async (book: any) => {
 				await reader.renderBook(book.Url)
@@ -28,6 +39,6 @@ export const fetchBooks = async (
 
 		setBook(books)
 	} catch (error: any) {
-		console.error('Failed to load books', error)
+		console.error('Error fetching books:', error)
 	}
 }

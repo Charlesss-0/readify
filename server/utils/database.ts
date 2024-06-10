@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const { MongoClient } = require('mongodb')
-const config = require('../config/config')
+const config = require('@/server/config/mongodb-config')
 
 async function connect() {
 	const uri = config.MONGODB_URI

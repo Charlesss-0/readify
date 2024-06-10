@@ -1,5 +1,7 @@
+'use client'
+
 import Link from 'next/link'
-import { fetchBooks } from '@/src/utils'
+import { fetchBookCollection } from '@/src/utils'
 import styled from 'styled-components'
 import { useBookContext } from '../context/bookContext'
 import { useEffect } from 'react'
@@ -12,7 +14,7 @@ const Cover = styled.div`
 	box-shadow: 1px 1px 1rem 0 #000a;
 `
 
-export default function BookCover() {
+export default function BookCollection() {
 	const { reader } = useBookContext()
 	const { book, setBook } = useBookContext()
 
@@ -21,7 +23,7 @@ export default function BookCover() {
 	}
 
 	useEffect(() => {
-		fetchBooks(reader, setBook)
+		fetchBookCollection(reader, setBook)
 	}, [])
 
 	return (

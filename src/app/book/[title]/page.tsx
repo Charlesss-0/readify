@@ -44,7 +44,7 @@ export default function Book() {
 	useEffect(() => {
 		if (rendition.current && location === null) {
 			rendition.current.display().then(() => {
-				const initialLocation = rendition.current?.location.start.index
+				const initialLocation = rendition.current?.location.start.cfi
 				setLocation(initialLocation!)
 			})
 		}

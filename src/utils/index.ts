@@ -1,4 +1,6 @@
-import { fetchBooks } from './fetchBookCollection'
+import { fetchBookCollection } from './fetchBookCollection'
 import { findSelectedBook } from './findSelectedBook'
+import { uploadFileToS3 } from './uploadFileToS3'
+import { verifyCurrentUser } from './verifyUser'
 
-export { fetchBooks, findSelectedBook }
+export { fetchBookCollection, findSelectedBook, uploadFileToS3, verifyCurrentUser }

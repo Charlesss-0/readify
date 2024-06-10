@@ -4,8 +4,16 @@ export const findSelectedBook = async (
 	bookId: string,
 	setBookURL: React.Dispatch<React.SetStateAction<string>>
 ) => {
+	const userUid = localStorage.getItem('userUid')
+	if (!userUid) {
+		console.error('Sign in to see your books')
+		return
+	}
+
 	try {
-		const response = await fetch('/api/books')
+		const response = await fetch(`/api/books?userUid=${userUid}`, {
+			method: 'GET',
+		})
 		if (!response.ok) {
 			console.error('Failed to fetch books', response)
 			return
