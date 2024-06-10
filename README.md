@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [ePub Reader Web App](https://readify-one.vercel.app)
 
-## Getting Started
+Welcome to the ePub Reader Web App! This application allows you to sign in, store your books in the cloud, and read your saved books from anywhere.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication**: Sign in with your account to access your personalized library.
+- **Cloud Storage**: Upload your ePub books to the cloud for safe storage and easy access.
+- **Book Reader**: Read your ePub books directly in the web app with a rich and interactive reading experience.
+- **Book Management**: Easily manage your book collection, including adding new books and removing old ones.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Sign In
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Click on the "Sign In" button on the top right corner of the app.
+2. Sign in using your preferred method (e.g., Google, Email, etc.).
 
-## Learn More
+### Uploading Books
 
-To learn more about Next.js, take a look at the following resources:
+1. Once signed in, click on the "Upload" button.
+2. Select an ePub file from your device to upload.
+3. The book will be uploaded to your cloud storage and added to your library.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Reading Books
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. From your library, click on any book cover to start reading.
+2. Use the navigation controls to move through the book.
 
-## Deploy on Vercel
+## Technologies Used
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js**: React framework for server-side rendering and static site generation.
+- **Firebase**: For user authentication.
+- **AWS S3**: For storing ePub files.
+- **epubjs**: JavaScript library for rendering ePub files.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request.
+
+## Contact
+
+For any questions or support, please open an issue or contact aragonaugusto24@gmail.com.
+
+---
+
+Thank you for using the ePub Reader Web App! Happy reading!
