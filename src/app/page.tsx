@@ -1,6 +1,6 @@
 'use client'
 
-import { BookCollection, UploadBtn } from '@/src/components'
+import { BookCollection, Header, UploadBtn } from '@/src/components'
 import React, { useEffect } from 'react'
 
 import type { User } from 'firebase/auth'
@@ -17,7 +17,7 @@ export default function Home() {
 		try {
 			auth.onAuthStateChanged((user: User | null) => {
 				if (!user) {
-					router.push('/login')
+					router.push('/auth/login')
 					return
 				}
 
@@ -34,10 +34,13 @@ export default function Home() {
 	}, [])
 
 	return (
-		<main className="h-screen">
-			<BookCollection />
+		<>
+			<Header />
+			<main className="h-screen">
+				<BookCollection />
 
-			<UploadBtn />
-		</main>
+				<UploadBtn />
+			</main>
+		</>
 	)
 }

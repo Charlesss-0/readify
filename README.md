@@ -33,6 +33,7 @@ Welcome to the ePub Reader Web App! This application allows you to sign in, stor
 - **Firebase**: For user authentication.
 - **AWS S3**: For storing ePub files.
 - **epubjs**: JavaScript library for rendering ePub files.
+- **react-reader**: React library for rendering a pre-built ePub navigation system
 
 ## Contributing
 

@@ -39,7 +39,7 @@ export default function BookCollection() {
 							<Cover
 								className="w-[260px] h-[400px] md:w-[140px] md:h-[210px]"
 								style={{
-									backgroundImage: `url('${book.cover}')`,
+									backgroundImage: `url(${book.cover})`,
 								}}
 							/>
 						</Link>

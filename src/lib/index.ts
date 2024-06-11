@@ -1,3 +1,3 @@
-import Reader from './epub'
+import Reader from './reader'
 
 export { Reader }
