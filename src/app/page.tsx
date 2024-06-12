@@ -1,6 +1,6 @@
 'use client'
 
-import { BookCollection, Header, UploadBtn } from '@/src/components'
+import { BookCollection, Sidebar, UploadBtn } from '@/src/components'
 import React, { useEffect } from 'react'
 
 import type { User } from 'firebase/auth'
@@ -35,7 +35,7 @@ export default function Home() {
 
 	return (
 		<>
-			<Header />
+			<Sidebar />
 			<main className="h-screen">
 				<BookCollection />
 

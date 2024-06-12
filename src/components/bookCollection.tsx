@@ -27,7 +27,7 @@ export default function BookCollection() {
 	}, [])
 
 	return (
-		<div className="flex flex-wrap h-screen w-full items-start justify-around gap-[5%] p-[1rem] overflow-auto">
+		<div className="flex flex-wrap w-full items-start justify-around gap-[5%] p-[1rem]">
 			{book && (
 				<>
 					{book.map(book => (

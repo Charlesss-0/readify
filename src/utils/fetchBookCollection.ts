@@ -21,7 +21,6 @@ export const fetchBookCollection = async (
 		}
 		const data = await response.json()
 
-		// map data to return specific book metadata
 		const books = await Promise.all(
 			data.map(async (book: any) => {
 				await reader.renderBook(book.Url)
