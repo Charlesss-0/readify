@@ -22,9 +22,9 @@ export default function BookCollection() {
 		localStorage.setItem('bookId', id)
 	}
 
-	useEffect(() => {
-		fetchBookCollection(reader, setBook)
-	}, [])
+	// useEffect(() => {
+	// 	fetchBookCollection(reader, setBook)
+	// }, [])
 
 	return (
 		<div className="flex flex-wrap w-full items-start justify-around gap-[5%] p-[1rem]">

@@ -10,7 +10,7 @@ export default function UploadBtn(): React.ReactElement {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	return (
-		<div className="fixed bottom-[1rem] right-[1rem]">
+		<div className="fixed bottom-5 left-[50%] translate-x-[-50%]">
 			<input
 				ref={inputRef}
 				id="file"
@@ -22,7 +22,7 @@ export default function UploadBtn(): React.ReactElement {
 			<button
 				type="button"
 				onClick={() => inputRef.current?.click()}
-				className="btn btn-secondary sm:btn-sm md:btn-md"
+				className="btn btn-secondary w-[max-content] sm:btn-sm md:btn-md"
 			>
 				Upload Book
 			</button>
