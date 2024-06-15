@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import Image from 'next/image'
 import { MdKeyboardArrowDown } from 'react-icons/md'
@@ -11,7 +11,16 @@ interface User {
 	name: string
 }
 
-const SideDrawer = styled.aside<{ $isOpen: boolean }>`
+const Aside = styled.aside<{ $isOpen: boolean }>`
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+`
+
+const SideDrawer = styled.div<{ $isOpen: boolean }>`
+	display: flex;
+	flex-direction: column;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -19,7 +28,21 @@ const SideDrawer = styled.aside<{ $isOpen: boolean }>`
 	transform: ${props => (props.$isOpen ? 'translateX(0%)' : 'translateX(-101%)')};
 	transition: transform 200ms;
 	background: #2f2f2f;
-	z-index: 1;
+	z-index: 2;
+`
+
+const Overlay = styled.div<{ $isOpen: boolean }>`
+	${props =>
+		props.$isOpen
+			? `
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100vh;
+			background: #0f0f0f5f;
+		`
+			: ''}
 `
 
 export default function Sidebar() {
@@ -28,7 +51,11 @@ export default function Sidebar() {
 	const profileOptions = ['Profile', 'Settings', 'Log out']
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 
-	const toggleSidebar = () => {
+	const toggleDrawer = () => {
+		if (!isSidebarOpen) {
+			return
+		}
+
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
@@ -51,9 +78,9 @@ export default function Sidebar() {
 	}, [currentUser])
 
 	return (
-		<aside className="fixed top-0 left-0 z-10">
+		<Aside $isOpen={isSidebarOpen}>
 			<button
-				onClick={toggleSidebar}
+				onClick={() => setIsSidebarOpen(!isSidebarOpen)}
 				className="absolute p-5 transition-all duration-200 hover:opacity-90 active:scale-95 z-10"
 			>
 				<svg
@@ -104,6 +131,8 @@ export default function Sidebar() {
 
 				<UploadBtn />
 			</SideDrawer>
-		</aside>
+
+			<Overlay $isOpen={isSidebarOpen} onClick={toggleDrawer} />
+		</Aside>
 	)
 }
