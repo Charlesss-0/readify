@@ -3,8 +3,9 @@ import React from 'react'
 // fetch book collection to be rendered on the home page
 export const fetchBookCollection = async (
 	reader: BookReader,
-	setBook: React.Dispatch<React.SetStateAction<Book[]>>
-) => {
+	setBook: React.Dispatch<React.SetStateAction<Book[]>>,
+	setIsBookLoading: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<void> => {
 	const userUid = localStorage.getItem('userUid')
 	if (!userUid) {
 		console.error('Sign in to see your books')
@@ -12,6 +13,8 @@ export const fetchBookCollection = async (
 	}
 
 	try {
+		setIsBookLoading(true)
+
 		const response = await fetch(`/api/books?userUid=${userUid}`, {
 			method: 'GET',
 		})
@@ -37,6 +40,8 @@ export const fetchBookCollection = async (
 		}
 
 		setBook(books)
+
+		setIsBookLoading(false)
 	} catch (error: any) {
 		console.error('Error fetching books:', error)
 	}

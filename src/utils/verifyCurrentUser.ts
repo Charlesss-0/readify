@@ -1,6 +1,6 @@
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { User } from 'firebase/auth'
-import { firebaseAuth } from '@/server/config/firebaseConfig'
+import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
 
 // check if user is logged in so they can be redirected to the home page
 export const verifyCurrentUser = async (router: AppRouterInstance, path: string) => {

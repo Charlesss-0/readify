@@ -7,7 +7,7 @@ import {
 	signInWithPopup,
 } from 'firebase/auth'
 
-import { firebaseAuth } from '@/server/config/firebaseConfig'
+import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { verifyCurrentUser } from '@/src/utils'

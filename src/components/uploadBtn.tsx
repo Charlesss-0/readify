@@ -3,10 +3,8 @@
 import React, { useRef } from 'react'
 
 import { uploadFileToS3 } from '@/src/utils'
-import { useBookContext } from '../context/bookContext'
 
 export default function UploadBtn(): React.ReactElement {
-	const { reader, setBook } = useBookContext()
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	return (
@@ -16,7 +14,7 @@ export default function UploadBtn(): React.ReactElement {
 				id="file"
 				type="file"
 				accept=".epub"
-				onChange={e => uploadFileToS3(reader, setBook, e)}
+				onChange={e => uploadFileToS3(e)}
 				className="m-[1rem] hidden"
 			/>
 			<button

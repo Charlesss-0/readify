@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+'use client'
 
-import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import UploadBtn from './uploadBtn'
 import styled from 'styled-components'
-import { useBookContext } from '../context/bookContext'
+import { useAuthContext } from '../context'
 
 interface User {
 	photoURL: string
@@ -26,12 +27,15 @@ const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	top: 0;
 	height: 100vh;
 	transform: ${props => (props.$isOpen ? 'translateX(0%)' : 'translateX(-101%)')};
-	transition: transform 200ms;
+	transition: transform 300ms;
 	background: #2f2f2f;
 	z-index: 2;
 `
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
+	transition: all 200ms;
+	opacity: 0;
+
 	${props =>
 		props.$isOpen
 			? `
@@ -41,13 +45,14 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 			width: 100%;
 			height: 100vh;
 			background: #0f0f0f5f;
+			opacity: 1;
 		`
 			: ''}
 `
 
 export default function Sidebar() {
-	const { currentUser } = useBookContext()
-	const [user, setUser] = useState<User | null>(null)
+	const { currentUser } = useAuthContext()
+	const [userInfo, setUserInfo] = useState<User | null>(null)
 	const profileOptions = ['Profile', 'Settings', 'Log out']
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 
@@ -60,13 +65,9 @@ export default function Sidebar() {
 	}
 
 	const fetchCurrentUser = () => {
-		if (!currentUser) {
-			console.error('No user found!')
-		}
-
 		const userData = currentUser?.providerData[0]
 
-		setUser(prev => ({
+		setUserInfo(prev => ({
 			...prev,
 			photoURL: userData?.photoURL as string,
 			name: userData?.displayName as string,
@@ -102,17 +103,16 @@ export default function Sidebar() {
 			<SideDrawer $isOpen={isSidebarOpen}>
 				<details className="dropdown pt-[4.4rem] px-3 text-base-100">
 					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-[#efefef2f] active:scale-[0.99]">
-						<div className="avatar">
-							<Image
-								src={user?.photoURL!}
-								alt={user?.name!}
-								width={30}
-								height={30}
-								className="rounded-full"
+						<div className="w-8 rounded-full overflow-hidden">
+							<img
+								src={userInfo?.photoURL as string}
+								alt={userInfo?.name as string}
+								draggable={false}
+								loading="lazy"
 							/>
 						</div>
 
-						<p className="font-bold">{user?.name}</p>
+						<p className="font-bold">{userInfo?.name}</p>
 
 						<MdKeyboardArrowDown />
 					</summary>

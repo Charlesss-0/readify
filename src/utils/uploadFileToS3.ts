@@ -1,11 +1,6 @@
 import React from 'react'
-import { fetchBookCollection } from './fetchBookCollection'
 
-export const uploadFileToS3 = async (
-	reader: BookReader,
-	setBook: React.Dispatch<React.SetStateAction<Book[]>>,
-	e: React.ChangeEvent<HTMLInputElement>
-) => {
+export const uploadFileToS3 = async (e: React.ChangeEvent<HTMLInputElement>) => {
 	const userUid = localStorage.getItem('userUid')
 	if (!userUid) {
 		alert('Please sign in to upload files')
@@ -15,7 +10,7 @@ export const uploadFileToS3 = async (
 	// set current file to upload
 	const file = e.target.files?.[0]
 	if (!file) {
-		console.error('No file provided!')
+		alert('No file provided!')
 		return
 	}
 
@@ -38,8 +33,7 @@ export const uploadFileToS3 = async (
 		if (!response.ok) {
 			console.error('Failed to upload file')
 		}
-		fetchBookCollection(reader, setBook)
-		console.log('File uploaded successfully!')
+		alert('File uploaded successfully!')
 	} catch (e: any) {
 		console.error('Error uploading file', e)
 	}
