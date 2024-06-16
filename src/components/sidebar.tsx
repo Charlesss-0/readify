@@ -45,6 +45,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 			width: 100%;
 			height: 100vh;
 			background: #0f0f0f5f;
+			backdrop-filter: blur(10px);
 			opacity: 1;
 		`
 			: ''}

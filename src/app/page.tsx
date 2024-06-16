@@ -95,7 +95,7 @@ export default function Home() {
 				<>
 					<Header />
 					<Sidebar />
-					<main className="h-screen">
+					<main className="h-screen overflow-auto">
 						<BookCollection />
 					</main>
 				</>
