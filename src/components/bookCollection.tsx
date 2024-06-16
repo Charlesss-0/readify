@@ -2,31 +2,45 @@
 
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import Link from 'next/link'
+import { devices } from '../constants'
 import styled from 'styled-components'
 import { useBookContext } from '@/src/context/bookContext'
 
 const Collection = styled.div`
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1rem));
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	justify-content: center;
 	gap: 2rem;
 	width: 100%;
 	padding: 1rem;
 	margin-top: 5rem;
 
-	@media (max-width: 600px) {
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1rem));
+	@media only screen and ${devices.md} {
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 		gap: 1rem;
-		font-size: 0.7rem;
+		font-size: 0.9rem;
 	}
 `
 
+const BookItem = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 2rem;
+`
+
 const Cover = styled.div`
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	border-radius: 0.5rem;
-	box-shadow: 1px 1px 2rem 0 #000a;
+	aspect-ratio: 1/1.5;
+	border-radius: 1rem;
+	box-shadow: 1px 1px 1rem 0 #000a;
+	overflow: hidden;
+
+	& > img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 `
 
 export default function BookCollection() {
@@ -38,31 +52,32 @@ export default function BookCollection() {
 
 	return (
 		<Collection>
-			{book && (
+			{book && book.length > 0 ? (
 				<>
 					{book.map(book => (
-						<div
-							key={book.id}
-							className="card grid justify-items-center bg-[#efefef2f] p-3 mb-5"
-						>
+						<BookItem key={book.id}>
 							<Link
 								href={`/book/${book.title.replace(/\s+/g, '_')}`}
 								onClick={() => handleBookSelection(book.id)}
 							>
-								<Cover
-									className="w-[260px] h-[400px] md:w-[120px] md:h-[180px]"
-									style={{
-										backgroundImage: `url(${book.cover})`,
-									}}
-								/>
+								<Cover>
+									<img src={`${book.cover}`} alt={`${book.title}`} loading="lazy" />
+								</Cover>
 							</Link>
-							<div className="flex items-center justify-between w-full p-3">
-								<h1>{book.title}</h1>
-								<BsThreeDotsVertical />
+
+							<div className="w-full flex items-center pt-3">
+								<h1 className="w-full text-center font-bold whitespace-nowrap text-ellipsis overflow-hidden">
+									{book.title}
+								</h1>
+								<button className="p-2 rounded-full hover:bg-neutral active:scale-95">
+									<BsThreeDotsVertical className="h-5 w-5" />
+								</button>
 							</div>
-						</div>
+						</BookItem>
 					))}
 				</>
+			) : (
+				<h1>Add books...</h1>
 			)}
 		</Collection>
 	)

@@ -4,6 +4,7 @@ import { BookCollection, Header, Sidebar } from '@/src/components'
 import styled, { keyframes } from 'styled-components'
 import { useEffect, useState } from 'react'
 
+import { theme } from '../constants'
 import { useBookContext } from '../context'
 
 const loaderAnimation = keyframes`
@@ -27,7 +28,7 @@ const LoadingWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: #1f1f1f;
+	background: ${theme.primary};
 `
 
 const Loader = styled.div`

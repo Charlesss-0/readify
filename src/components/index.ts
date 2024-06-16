@@ -1,4 +1,4 @@
-import AppStateManager from './AppStateManager'
+import AppStateManager from '@/src/hoc/AppStateManager'
 import BookCollection from './bookCollection'
 import Header from './header'
 import Sidebar from './sidebar'

@@ -103,7 +103,7 @@ export default function Sidebar() {
 
 			<SideDrawer $isOpen={isSidebarOpen}>
 				<details className="dropdown pt-[4.4rem] px-3 text-base-100">
-					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-[#efefef2f] active:scale-[0.99]">
+					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.99]">
 						<div className="w-8 rounded-full overflow-hidden">
 							<img
 								src={userInfo?.photoURL as string}
@@ -118,11 +118,11 @@ export default function Sidebar() {
 						<MdKeyboardArrowDown />
 					</summary>
 
-					<ul className="mt-3 flex flex-col gap-3 p-3 rounded-lg bg-neutral select-none border border-[#efefef3f]">
+					<ul className="mt-3 flex flex-col gap-3 p-3 rounded-lg bg-primary select-none border border-neutral">
 						{profileOptions.map((item, index) => (
 							<li
 								key={index}
-								className="p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-[#efefef2f] active:scale-[0.98]"
+								className="p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-neutral active:scale-[0.98]"
 							>
 								{item}
 							</li>
