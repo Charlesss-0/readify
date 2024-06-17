@@ -1,10 +1,15 @@
 'use client'
 
+import { LuSettings, LuUser2 } from 'react-icons/lu'
 import React, { useEffect, useState } from 'react'
 
+import { GrFavorite } from 'react-icons/gr'
 import { MdKeyboardArrowDown } from 'react-icons/md'
+import { PiBooksLight } from 'react-icons/pi'
+import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
 import styled from 'styled-components'
+import { theme } from '../constants'
 import { useAuthContext } from '../context'
 
 interface User {
@@ -22,6 +27,7 @@ const Aside = styled.aside<{ $isOpen: boolean }>`
 const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	display: flex;
 	flex-direction: column;
+	gap: 1rem;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -29,7 +35,13 @@ const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	transform: ${props => (props.$isOpen ? 'translateX(0%)' : 'translateX(-101%)')};
 	transition: transform 300ms;
 	background: #2f2f2f;
+	padding: 1rem;
 	z-index: 2;
+`
+
+const SideSection = styled.ul`
+	display: flex;
+	flex-direction: column;
 `
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
@@ -44,8 +56,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 			left: 0;
 			width: 100%;
 			height: 100vh;
-			background: #0f0f0f5f;
-			backdrop-filter: blur(10px);
+			background: #0f0f0f9f;
 			opacity: 1;
 		`
 			: ''}
@@ -54,8 +65,31 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 export default function Sidebar() {
 	const { currentUser } = useAuthContext()
 	const [userInfo, setUserInfo] = useState<User | null>(null)
-	const profileOptions = ['Profile', 'Settings', 'Log out']
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+	const profileOptions = [
+		{
+			item: 'Profile',
+			icon: <LuUser2 />,
+		},
+		{
+			item: 'Settings',
+			icon: <LuSettings />,
+		},
+		{
+			item: 'Log out',
+			icon: <TbLogout />,
+		},
+	]
+	const sidebarItems = [
+		{
+			item: 'My Books',
+			icon: <PiBooksLight />,
+		},
+		{
+			item: 'Favorite Books',
+			icon: <GrFavorite />,
+		},
+	]
 
 	const toggleDrawer = () => {
 		if (!isSidebarOpen) {
@@ -102,8 +136,8 @@ export default function Sidebar() {
 			</button>
 
 			<SideDrawer $isOpen={isSidebarOpen}>
-				<details className="dropdown pt-[4.4rem] px-3 text-base-100">
-					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.99]">
+				<details className="dropdown pt-12 text-base-100">
+					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]">
 						<div className="w-8 rounded-full overflow-hidden">
 							<img
 								src={userInfo?.photoURL as string}
@@ -118,17 +152,30 @@ export default function Sidebar() {
 						<MdKeyboardArrowDown />
 					</summary>
 
-					<ul className="mt-3 flex flex-col gap-3 p-3 rounded-lg bg-primary select-none border border-neutral">
+					<ul className="absolute w-full mt-3 flex flex-col gap- p-2 rounded-lg bg-primary select-none border border-neutral">
 						{profileOptions.map((item, index) => (
 							<li
 								key={index}
-								className="p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-neutral active:scale-[0.98]"
+								className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-neutral active:scale-[0.98]"
 							>
-								{item}
+								{item.icon}
+								{item.item}
 							</li>
 						))}
 					</ul>
 				</details>
+
+				<SideSection>
+					{sidebarItems.map((item, index) => (
+						<li
+							key={index}
+							className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 select-none cursor-pointer hover:bg-neutral active:scale-[0.98]"
+						>
+							{item.icon}
+							{item.item}
+						</li>
+					))}
+				</SideSection>
 
 				<UploadBtn />
 			</SideDrawer>

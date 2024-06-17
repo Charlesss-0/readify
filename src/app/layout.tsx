@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					</Head>
 					<body
 						style={{
-							backgroundColor: theme.primary_content,
+							backgroundColor: theme['primary-content'],
 						}}
 					>
 						<AppStateManager>

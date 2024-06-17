@@ -8,7 +8,7 @@ export default function UploadBtn(): React.ReactElement {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	return (
-		<div className="flex-1 flex justify-center items-end px-2 pb-2">
+		<div className="flex-1 flex justify-center items-end">
 			<input
 				ref={inputRef}
 				id="file"
