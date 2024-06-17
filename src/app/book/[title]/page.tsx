@@ -4,18 +4,31 @@ import type { Contents, Rendition } from 'epubjs'
 import { useEffect, useRef, useState } from 'react'
 
 import { ReactReader } from 'react-reader'
-import { findSelectedBook } from '@/src/utils'
 import useLocalStorageState from 'use-local-storage-state'
 
 export default function Book() {
-	const [bookURL, setBookURL] = useState<string>('')
+	const [currentBook, setCurrentBook] = useState<string>('')
 	const [location, setLocation] = useLocalStorageState<string | number | null>(
 		'current-book-location',
 		{
-			defaultValue: null,
+			defaultValue: 0,
 		}
 	)
 	const rendition = useRef<Rendition | undefined>(undefined)
+
+	const getBookUrl = async () => {
+		const bookUrl = localStorage.getItem('bookUrl')
+		if (!bookUrl) {
+			console.error('No book url has been defined')
+			return
+		}
+
+		try {
+			setCurrentBook(bookUrl)
+		} catch (error: any) {
+			console.error('Error reading book', error.message)
+		}
+	}
 
 	const setFontSize = () => {
 		const screenWidth = window.innerWidth
@@ -33,24 +46,7 @@ export default function Book() {
 	}
 
 	useEffect(() => {
-		const bookId = localStorage.getItem('bookId')
-		if (!bookId) {
-			console.error('No book id has been defined')
-			return
-		}
-		findSelectedBook(bookId, setBookURL)
-	}, [bookURL])
-
-	useEffect(() => {
-		if (rendition.current && location === null) {
-			rendition.current.display().then(() => {
-				const initialLocation = rendition.current?.location.start.cfi
-				setLocation(initialLocation!)
-			})
-		}
-	}, [location])
-
-	useEffect(() => {
+		getBookUrl()
 		setFontSize()
 		window.addEventListener('resize', setFontSize)
 
@@ -61,7 +57,7 @@ export default function Book() {
 		<>
 			<div className="h-screen">
 				<ReactReader
-					url={bookURL}
+					url={currentBook}
 					location={location}
 					locationChanged={(loc: string) => setLocation(loc)}
 					epubOptions={{

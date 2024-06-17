@@ -46,8 +46,8 @@ const Cover = styled.div`
 export default function BookCollection() {
 	const { book } = useBookContext()
 
-	const handleBookSelection = (id: string) => {
-		localStorage.setItem('bookId', id)
+	const handleBookSelection = (url: string) => {
+		localStorage.setItem('bookUrl', url)
 	}
 
 	return (
@@ -58,7 +58,7 @@ export default function BookCollection() {
 						<BookItem key={book.id}>
 							<Link
 								href={`/book/${book.title.replace(/\s+/g, '_')}`}
-								onClick={() => handleBookSelection(book.id)}
+								onClick={() => handleBookSelection(book.url)}
 							>
 								<Cover>
 									<img src={`${book.cover}`} alt={`${book.title}`} loading="lazy" />

@@ -1,11 +1,11 @@
 import './globals.css'
 
-import { AppStateManager } from '@/src/components'
+import { AppStateManager, StyledComponentsRegistry } from '@/src/hoc'
+
 import { AuthContextProvider } from '@/src/context/authContext'
 import { BookContextProvider } from '@/src/context/bookContext'
 import Head from 'next/head'
 import { Metadata } from 'next'
-import StyledComponentsRegistry from '@/src/lib/registry'
 import { theme } from '../constants'
 
 export const metadata: Metadata = {

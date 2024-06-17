@@ -1,6 +1,6 @@
 import React from 'react'
 
-// fetch book collection to be rendered on the home page
+// fetch book collection to be rendered on the home page and set loading state
 export const fetchBookCollection = async (
 	reader: BookReader,
 	setBook: React.Dispatch<React.SetStateAction<Book[]>>,
