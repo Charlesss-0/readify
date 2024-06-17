@@ -1,11 +1,12 @@
 'use client'
 
-import { LuSettings, LuUser2 } from 'react-icons/lu'
+import { LuSettings, LuUser2, LuUserCircle } from 'react-icons/lu'
+import { PiBooks, PiBooksLight } from 'react-icons/pi'
 import React, { useEffect, useState } from 'react'
 
+import { FiClock } from 'react-icons/fi'
 import { GrFavorite } from 'react-icons/gr'
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import { PiBooksLight } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
 import styled from 'styled-components'
@@ -34,7 +35,7 @@ const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	height: 100vh;
 	transform: ${props => (props.$isOpen ? 'translateX(0%)' : 'translateX(-101%)')};
 	transition: transform 300ms;
-	background: #2f2f2f;
+	background: ${theme['primary-content']};
 	padding: 1rem;
 	z-index: 2;
 `
@@ -82,11 +83,15 @@ export default function Sidebar() {
 	]
 	const sidebarItems = [
 		{
-			item: 'My Books',
-			icon: <PiBooksLight />,
+			item: 'Recent',
+			icon: <FiClock />,
 		},
 		{
-			item: 'Favorite Books',
+			item: 'Library',
+			icon: <PiBooks />,
+		},
+		{
+			item: 'Favorites',
 			icon: <GrFavorite />,
 		},
 	]
@@ -99,7 +104,7 @@ export default function Sidebar() {
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
-	const fetchCurrentUser = () => {
+	const fetchCurrentUserData = () => {
 		const userData = currentUser?.providerData[0]
 
 		setUserInfo(prev => ({
@@ -110,7 +115,7 @@ export default function Sidebar() {
 	}
 
 	useEffect(() => {
-		fetchCurrentUser()
+		fetchCurrentUserData()
 	}, [currentUser])
 
 	return (
@@ -139,12 +144,16 @@ export default function Sidebar() {
 				<details className="dropdown pt-12 text-base-100">
 					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]">
 						<div className="w-8 rounded-full overflow-hidden">
-							<img
-								src={userInfo?.photoURL as string}
-								alt={userInfo?.name as string}
-								draggable={false}
-								loading="lazy"
-							/>
+							{userInfo?.photoURL ? (
+								<img
+									src={userInfo.photoURL}
+									alt={userInfo.name}
+									draggable={false}
+									loading="lazy"
+								/>
+							) : (
+								<LuUserCircle />
+							)}
 						</div>
 
 						<p className="font-bold">{userInfo?.name}</p>
