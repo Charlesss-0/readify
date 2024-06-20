@@ -83,7 +83,7 @@ export default function BookCollection() {
 								</Cover>
 							</Link>
 
-							<div className="w-full flex items-center p-3">
+							<div className="w-full flex items-center pt-3">
 								<h1 className="w-full text-center font-bold whitespace-nowrap text-ellipsis overflow-hidden">
 									{book.title}
 								</h1>
