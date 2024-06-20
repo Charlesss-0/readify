@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import DropdownContent from './dropdownContent'
 import { FiClock } from 'react-icons/fi'
 import { GrFavorite } from 'react-icons/gr'
-import { MdKeyboardArrowDown } from 'react-icons/md'
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { PiBooks } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
@@ -159,7 +159,11 @@ export default function Sidebar() {
 
 						<p className="font-bold">{userInfo?.name}</p>
 
-						<MdKeyboardArrowDown />
+						{isSidebarOpen ? (
+							<MdKeyboardArrowDown />
+						) : (
+							<MdKeyboardArrowUp />
+						)}
 					</summary>
 
 					<DropdownContent items={profileOptions} />

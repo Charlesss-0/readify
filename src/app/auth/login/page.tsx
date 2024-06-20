@@ -21,6 +21,7 @@ export default function LoginPage() {
 			const auth = firebaseAuth
 			await setPersistence(auth, browserLocalPersistence)
 			const result = await signInWithPopup(auth, provider)
+			localStorage.setItem('user', JSON.stringify(result))
 			return result
 		} catch (error) {
 			console.error('Error signing in with Google', error)
