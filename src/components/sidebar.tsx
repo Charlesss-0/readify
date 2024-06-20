@@ -1,12 +1,13 @@
 'use client'
 
 import { LuSettings, LuUser2, LuUserCircle } from 'react-icons/lu'
-import { PiBooks, PiBooksLight } from 'react-icons/pi'
 import React, { useEffect, useState } from 'react'
 
+import DropdownContent from './dropdownContent'
 import { FiClock } from 'react-icons/fi'
 import { GrFavorite } from 'react-icons/gr'
 import { MdKeyboardArrowDown } from 'react-icons/md'
+import { PiBooks } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
 import styled from 'styled-components'
@@ -161,17 +162,7 @@ export default function Sidebar() {
 						<MdKeyboardArrowDown />
 					</summary>
 
-					<ul className="absolute w-full mt-3 flex flex-col gap- p-2 rounded-lg bg-primary select-none border border-neutral">
-						{profileOptions.map((item, index) => (
-							<li
-								key={index}
-								className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-neutral active:scale-[0.98]"
-							>
-								{item.icon}
-								{item.item}
-							</li>
-						))}
-					</ul>
+					<DropdownContent items={profileOptions} />
 				</details>
 
 				<SideSection>

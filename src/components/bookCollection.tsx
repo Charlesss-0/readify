@@ -1,7 +1,11 @@
 'use client'
 
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import DropdownContent from './dropdownContent'
+import { GrFavorite } from 'react-icons/gr'
+import { HiDownload } from 'react-icons/hi'
 import Link from 'next/link'
+import { LuTrash } from 'react-icons/lu'
 import { devices } from '../constants'
 import styled from 'styled-components'
 import { useBookContext } from '@/src/context/bookContext'
@@ -45,6 +49,20 @@ const Cover = styled.div`
 
 export default function BookCollection() {
 	const { book } = useBookContext()
+	const bookOptions = [
+		{
+			item: 'Add to favorites',
+			icon: <GrFavorite />,
+		},
+		{
+			item: 'Download',
+			icon: <HiDownload />,
+		},
+		{
+			item: 'Delete',
+			icon: <LuTrash />,
+		},
+	]
 
 	const handleBookSelection = (url: string) => {
 		localStorage.setItem('bookUrl', url)
@@ -79,13 +97,8 @@ export default function BookCollection() {
 										<BsThreeDotsVertical className="h-5 w-5" />
 									</div>
 
-									<ul
-										tabIndex={0}
-										className="dropdown-content bg-primary p-2 mt-2 flex flex-col w-max rounded-lg transition-all duration-200 [&>li]:p-2 [&>li]:rounded-md [&>li]:cursor-pointer"
-									>
-										<li className="hover:bg-neutral">Save to favorites</li>
-										<li className="hover:bg-neutral">Download</li>
-										<li className="hover:bg-neutral">Delete</li>
+									<ul className="dropdown-content w-52">
+										<DropdownContent items={bookOptions} />
 									</ul>
 								</div>
 							</div>
