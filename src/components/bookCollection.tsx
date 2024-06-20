@@ -65,13 +65,29 @@ export default function BookCollection() {
 								</Cover>
 							</Link>
 
-							<div className="w-full flex items-center pt-3">
+							<div className="w-full flex items-center p-3">
 								<h1 className="w-full text-center font-bold whitespace-nowrap text-ellipsis overflow-hidden">
 									{book.title}
 								</h1>
-								<button className="p-2 rounded-full hover:bg-neutral active:scale-95">
-									<BsThreeDotsVertical className="h-5 w-5" />
-								</button>
+
+								<div className="dropdown dropdown-end">
+									<div
+										role="button"
+										tabIndex={0}
+										className="p-2 rounded-full hover:bg-neutral active:scale-95"
+									>
+										<BsThreeDotsVertical className="h-5 w-5" />
+									</div>
+
+									<ul
+										tabIndex={0}
+										className="dropdown-content bg-primary p-2 mt-2 flex flex-col w-max rounded-lg transition-all duration-200 [&>li]:p-2 [&>li]:rounded-md [&>li]:cursor-pointer"
+									>
+										<li className="hover:bg-neutral">Save to favorites</li>
+										<li className="hover:bg-neutral">Download</li>
+										<li className="hover:bg-neutral">Delete</li>
+									</ul>
+								</div>
 							</div>
 						</BookItem>
 					))}
