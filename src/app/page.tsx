@@ -78,7 +78,7 @@ export default function Home() {
 		} else if (book.length > 0) {
 			setPageState('ready')
 		}
-	}, [isBookLoading, book])
+	}, [isBookLoading])
 
 	return (
 		<>

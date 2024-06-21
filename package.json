@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.577.0",
 		"@aws-sdk/s3-request-presigner": "^3.583.0",
+		"@reduxjs/toolkit": "^2.2.5",
 		"daisyui": "^4.11.1",
 		"epubjs": "^0.3.93",
 		"firebase": "^10.12.2",

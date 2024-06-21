@@ -1,15 +1,16 @@
 'use client'
 
 import { LuSettings, LuUser2, LuUserCircle } from 'react-icons/lu'
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import React, { useEffect, useState } from 'react'
 
 import DropdownContent from './dropdownContent'
 import { FiClock } from 'react-icons/fi'
 import { GrFavorite } from 'react-icons/gr'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { PiBooks } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
+import { signOut } from '@/src/utils'
 import styled from 'styled-components'
 import { theme } from '../constants'
 import { useAuthContext } from '../context'
@@ -68,6 +69,8 @@ export default function Sidebar() {
 	const { currentUser } = useAuthContext()
 	const [userInfo, setUserInfo] = useState<User | null>(null)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+
 	const profileOptions = [
 		{
 			item: 'Profile',
@@ -80,6 +83,7 @@ export default function Sidebar() {
 		{
 			item: 'Log out',
 			icon: <TbLogout />,
+			action: signOut,
 		},
 	]
 	const sidebarItems = [
@@ -143,7 +147,10 @@ export default function Sidebar() {
 
 			<SideDrawer $isOpen={isSidebarOpen}>
 				<details className="dropdown pt-12 text-base-100">
-					<summary className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]">
+					<summary
+						onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+						className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]"
+					>
 						<div className="w-8 rounded-full overflow-hidden">
 							{userInfo?.photoURL ? (
 								<img
@@ -159,11 +166,7 @@ export default function Sidebar() {
 
 						<p className="font-bold">{userInfo?.name}</p>
 
-						{isSidebarOpen ? (
-							<MdKeyboardArrowDown />
-						) : (
-							<MdKeyboardArrowUp />
-						)}
+						{isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
 					</summary>
 
 					<DropdownContent items={profileOptions} />

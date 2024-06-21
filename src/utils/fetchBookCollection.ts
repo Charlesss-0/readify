@@ -36,6 +36,7 @@ export const fetchBookCollection = async (
 		)
 		if (!books) {
 			console.error('No books found')
+			setIsBookLoading(false)
 			return
 		}
 
