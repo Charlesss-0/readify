@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 
 export default function AppStateManager({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
-	const { setCurrentUser } = useAuthContext()
+	const { currentUser, setCurrentUser } = useAuthContext()
 	const { reader, setBook, setIsBookLoading } = useBookContext()
 
 	const setUserData = async () => {
@@ -32,8 +32,10 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 	useEffect(() => {
 		setUserData()
-		fetchBookCollection(reader, setBook, setIsBookLoading)
-	}, [])
+		if (currentUser) {
+			fetchBookCollection(reader, setBook, setIsBookLoading)
+		}
+	}, [currentUser])
 
 	return <>{children}</>
 }

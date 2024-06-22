@@ -4,6 +4,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import DropdownContent from './dropdownContent'
 import { GrFavorite } from 'react-icons/gr'
 import { HiDownload } from 'react-icons/hi'
+import { ItemOption } from '../types/global'
 import Link from 'next/link'
 import { LuTrash } from 'react-icons/lu'
 import { devices } from '../constants'
@@ -49,7 +50,7 @@ const Cover = styled.div`
 
 export default function BookCollection() {
 	const { book } = useBookContext()
-	const bookOptions = [
+	const bookOptions: ItemOption[] = [
 		{
 			item: 'Add to favorites',
 			icon: <GrFavorite />,

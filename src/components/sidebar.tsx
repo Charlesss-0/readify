@@ -2,20 +2,20 @@
 
 import { LuSettings, LuUser2, LuUserCircle } from 'react-icons/lu'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import DropdownContent from './dropdownContent'
 import { FiClock } from 'react-icons/fi'
 import { GrFavorite } from 'react-icons/gr'
+import { ItemOption } from '../types/global'
 import { PiBooks } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import UploadBtn from './uploadBtn'
 import { signOut } from '@/src/utils'
 import styled from 'styled-components'
 import { theme } from '../constants'
-import { useAuthContext } from '../context'
 
-interface User {
+interface UserInfo {
 	photoURL: string
 	name: string
 }
@@ -66,40 +66,46 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `
 
 export default function Sidebar() {
-	const { currentUser } = useAuthContext()
-	const [userInfo, setUserInfo] = useState<User | null>(null)
+	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-	const profileOptions = [
-		{
-			item: 'Profile',
-			icon: <LuUser2 />,
-		},
-		{
-			item: 'Settings',
-			icon: <LuSettings />,
-		},
-		{
-			item: 'Log out',
-			icon: <TbLogout />,
-			action: signOut,
-		},
-	]
-	const sidebarItems = [
-		{
-			item: 'Recent',
-			icon: <FiClock />,
-		},
-		{
-			item: 'Library',
-			icon: <PiBooks />,
-		},
-		{
-			item: 'Favorites',
-			icon: <GrFavorite />,
-		},
-	]
+	const profileOptions: ItemOption[] = useMemo(
+		() => [
+			{
+				item: 'Profile',
+				icon: <LuUser2 />,
+			},
+			{
+				item: 'Settings',
+				icon: <LuSettings />,
+			},
+			{
+				item: 'Log out',
+				icon: <TbLogout />,
+				action: signOut,
+			},
+		],
+		[]
+	)
+
+	const sidebarItems: ItemOption[] = useMemo(
+		() => [
+			{
+				item: 'Recent',
+				icon: <FiClock />,
+			},
+			{
+				item: 'Library',
+				icon: <PiBooks />,
+			},
+			{
+				item: 'Favorites',
+				icon: <GrFavorite />,
+			},
+		],
+		[]
+	)
 
 	const toggleDrawer = () => {
 		if (!isSidebarOpen) {
@@ -110,18 +116,24 @@ export default function Sidebar() {
 	}
 
 	const fetchCurrentUserData = () => {
-		const userData = currentUser?.providerData[0]
+		const currentUserData = JSON.parse(localStorage.getItem('currentUser')!)
 
-		setUserInfo(prev => ({
-			...prev,
-			photoURL: userData?.photoURL as string,
-			name: userData?.displayName as string,
-		}))
+		try {
+			if (currentUserData) {
+				setUserInfo(prev => ({
+					...prev,
+					photoURL: currentUserData.photoURL,
+					name: currentUserData.displayName,
+				}))
+			}
+		} catch (error: any) {
+			console.error('Error fetching user data:', error)
+		}
 	}
 
 	useEffect(() => {
 		fetchCurrentUserData()
-	}, [currentUser])
+	}, [])
 
 	return (
 		<Aside $isOpen={isSidebarOpen}>

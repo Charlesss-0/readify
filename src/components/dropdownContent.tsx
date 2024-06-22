@@ -1,13 +1,7 @@
-import { ReactNode } from 'react'
-
-interface ItemType {
-	item: string
-	icon: ReactNode
-	action?: () => Promise<void>
-}
+import { ItemOption } from '@/src/types/global'
 
 interface DropdownContentProps {
-	items: ItemType[]
+	items: ItemOption[]
 }
 
 export default function DropdownContent({ items }: DropdownContentProps) {
