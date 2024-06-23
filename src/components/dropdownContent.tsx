@@ -1,5 +1,3 @@
-import { ItemOption } from '@/src/types/global'
-
 interface DropdownContentProps {
 	items: ItemOption[]
 }
