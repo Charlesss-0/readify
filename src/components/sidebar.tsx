@@ -1,24 +1,31 @@
 'use client'
 
-import { LuSettings, LuUser2, LuUserCircle } from 'react-icons/lu'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
-import React, { useEffect, useMemo, useState } from 'react'
+import {
+	FiClock,
+	GrFavorite,
+	LuSettings,
+	LuUser2,
+	LuUserCircle,
+	MdKeyboardArrowDown,
+	MdKeyboardArrowUp,
+	PiBooks,
+	TbLogout,
+} from '@/src/assets/icons/icons'
+import { useMemo, useState } from 'react'
 
 import DropdownContent from './dropdownContent'
-import { FiClock } from 'react-icons/fi'
-import { GrFavorite } from 'react-icons/gr'
-import { ItemOption } from '../types/global'
-import { PiBooks } from 'react-icons/pi'
-import { TbLogout } from 'react-icons/tb'
+import { RootState } from '@/src/lib'
 import UploadBtn from './uploadBtn'
 import { signOut } from '@/src/utils'
 import styled from 'styled-components'
-import { theme } from '../constants'
+import { theme } from '@/src/constants'
+import { useSelector } from 'react-redux'
 
-interface UserInfo {
-	photoURL: string
-	name: string
-}
+const Avatar = styled.div`
+	width: 2rem;
+	border-radius: 50%;
+	overflow: hidden;
+`
 
 const Aside = styled.aside<{ $isOpen: boolean }>`
 	position: fixed;
@@ -66,7 +73,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `
 
 export default function Sidebar() {
-	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
@@ -115,26 +122,6 @@ export default function Sidebar() {
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
-	const fetchCurrentUserData = () => {
-		const currentUserData = JSON.parse(localStorage.getItem('currentUser')!)
-
-		try {
-			if (currentUserData) {
-				setUserInfo(prev => ({
-					...prev,
-					photoURL: currentUserData.photoURL,
-					name: currentUserData.displayName,
-				}))
-			}
-		} catch (error: any) {
-			console.error('Error fetching user data:', error)
-		}
-	}
-
-	useEffect(() => {
-		fetchCurrentUserData()
-	}, [])
-
 	return (
 		<Aside $isOpen={isSidebarOpen}>
 			<button
@@ -163,20 +150,26 @@ export default function Sidebar() {
 						onClick={() => setIsDropdownOpen(!isDropdownOpen)}
 						className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]"
 					>
-						<div className="w-8 rounded-full overflow-hidden">
-							{userInfo?.photoURL ? (
-								<img
-									src={userInfo.photoURL}
-									alt={userInfo.name}
-									draggable={false}
-									loading="lazy"
-								/>
-							) : (
-								<LuUserCircle />
-							)}
-						</div>
+						{currentUser ? (
+							<>
+								<Avatar>
+									<img
+										src={currentUser.photoURL!}
+										alt={currentUser.displayName!}
+										draggable={false}
+										loading="lazy"
+									/>
+								</Avatar>
 
-						<p className="font-bold">{userInfo?.name}</p>
+								<p className="font-bold">{currentUser.displayName}</p>
+							</>
+						) : (
+							<>
+								<LuUserCircle />
+
+								<p className="font-bold">No user</p>
+							</>
+						)}
 
 						{isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
 					</summary>

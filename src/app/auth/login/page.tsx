@@ -2,17 +2,21 @@
 
 import {
 	GoogleAuthProvider,
+	User,
 	browserLocalPersistence,
 	setPersistence,
 	signInWithPopup,
 } from 'firebase/auth'
 
 import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
+import { setUser } from '@/src/lib/features/authslice'
+import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { verifyCurrentUser } from '@/src/utils'
 
 export default function LoginPage() {
+	const dispatch = useDispatch()
 	const router = useRouter()
 	const provider = new GoogleAuthProvider()
 
@@ -21,7 +25,7 @@ export default function LoginPage() {
 			const auth = firebaseAuth
 			await setPersistence(auth, browserLocalPersistence)
 			const result = await signInWithPopup(auth, provider)
-			localStorage.setItem('currentUser', JSON.stringify(result.user))
+			dispatch(setUser(result.user as User))
 		} catch (error) {
 			console.error('Error signing in with Google', error)
 		}
