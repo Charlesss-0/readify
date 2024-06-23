@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState } from 'react'
 
-import { Reader } from '../lib'
+import { Reader } from '@/src/utils'
 
 interface BookContextValue {
 	reader: BookReader

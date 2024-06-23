@@ -2,11 +2,16 @@ import React from 'react'
 
 // fetch book collection to be rendered on the home page and set loading state
 export const fetchBookCollection = async (
-	userUid: string,
 	reader: BookReader,
 	setBook: React.Dispatch<React.SetStateAction<Book[]>>,
 	setIsBookLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<void> => {
+	const userUid = localStorage.getItem('userUid')
+	if (!userUid) {
+		console.error('User UID not defined')
+		return
+	}
+
 	try {
 		setIsBookLoading(true)
 

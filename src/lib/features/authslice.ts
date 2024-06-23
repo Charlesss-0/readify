@@ -1,5 +1,5 @@
+import { signOut } from '@/src/utils'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { User } from 'firebase/auth'
 
 interface AuthState {
 	currentUser: {
@@ -21,11 +21,12 @@ const authSlice = createSlice({
 		setUser: (state, action: PayloadAction<AuthState['currentUser']>) => {
 			state.currentUser = action.payload
 		},
-		clearUser: state => {
+		logout: state => {
+			signOut()
 			state.currentUser = null
 		},
 	},
 })
 
-export const { setUser, clearUser } = authSlice.actions
+export const { setUser, logout } = authSlice.actions
 export default authSlice.reducer

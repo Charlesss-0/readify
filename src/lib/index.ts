@@ -1,4 +1,4 @@
 import { type AppStore, type AppDispatch, type RootState, createAppStore } from './store'
-import Reader from './reader'
+import { setUser, logout } from './features/authslice'
 
-export { Reader, createAppStore, AppStore, RootState, AppDispatch }
+export { createAppStore, AppStore, RootState, AppDispatch, setUser, logout }

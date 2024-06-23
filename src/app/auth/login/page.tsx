@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { RootState } from '@/src/lib'
 import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
-import { setUser } from '@/src/lib/features/authslice'
+import { setUser } from '@/src/lib'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { verifyCurrentUser } from '@/src/utils'
@@ -35,6 +35,7 @@ export default function LoginPage() {
 				photoURL: result.user.photoURL as string,
 			}
 
+			localStorage.setItem('userUid', user.uid)
 			dispatch(setUser(user))
 		} catch (error) {
 			console.error('Error signing in with Google', error)

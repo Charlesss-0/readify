@@ -1,20 +1,18 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { RootState } from '@/src/lib'
 import type { User } from 'firebase/auth'
 import { fetchBookCollection } from '@/src/utils'
 import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
-import { setUser } from '../lib/features/authslice'
+import { setUser } from '@/src/lib'
 import { useBookContext } from '../context'
+import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 
 export default function AppStateManager({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
 	const dispatch = useDispatch()
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const { reader, setBook, setIsBookLoading } = useBookContext()
 
 	const setUserData = () => {
@@ -43,13 +41,8 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 	useEffect(() => {
 		setUserData()
+		fetchBookCollection(reader, setBook, setIsBookLoading)
 	}, [])
-
-	useEffect(() => {
-		if (currentUser) {
-			fetchBookCollection(currentUser.uid, reader, setBook, setIsBookLoading)
-		}
-	}, [currentUser])
 
 	return <>{children}</>
 }
