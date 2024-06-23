@@ -2,7 +2,12 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { User } from 'firebase/auth'
 
 interface AuthState {
-	currentUser: User | null
+	currentUser: {
+		uid: string
+		displayName: string
+		email: string
+		photoURL: string
+	} | null
 }
 
 const initialState: AuthState = {

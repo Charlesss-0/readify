@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useAuthContext, useBookContext } from '../context'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { RootState } from '@/src/lib'
@@ -9,6 +8,7 @@ import type { User } from 'firebase/auth'
 import { fetchBookCollection } from '@/src/utils'
 import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
 import { setUser } from '../lib/features/authslice'
+import { useBookContext } from '../context'
 import { useRouter } from 'next/navigation'
 
 export default function AppStateManager({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const { reader, setBook, setIsBookLoading } = useBookContext()
 
-	const setUserData = async () => {
+	const setUserData = () => {
 		const auth = firebaseAuth
 		try {
 			auth.onAuthStateChanged((data: User | null) => {
@@ -26,8 +26,15 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 					return
 				}
 
-				localStorage.setItem('userUid', data?.uid as string)
-				dispatch(setUser(data))
+				const user = {
+					uid: data.uid as string,
+					displayName: data.displayName as string,
+					email: data.email as string,
+					photoURL: data.photoURL as string,
+				}
+
+				localStorage.setItem('userUid', data.uid as string)
+				dispatch(setUser(user))
 			})
 		} catch (e) {
 			console.error('Unable to verify user', e)
@@ -36,10 +43,13 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 	useEffect(() => {
 		setUserData()
+	}, [])
+
+	useEffect(() => {
 		if (currentUser) {
-			fetchBookCollection(reader, setBook, setIsBookLoading)
+			fetchBookCollection(currentUser.uid, reader, setBook, setIsBookLoading)
 		}
-	}, [dispatch, currentUser])
+	}, [currentUser])
 
 	return <>{children}</>
 }

@@ -7,16 +7,18 @@ import {
 	setPersistence,
 	signInWithPopup,
 } from 'firebase/auth'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { RootState } from '@/src/lib'
 import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
 import { setUser } from '@/src/lib/features/authslice'
-import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { verifyCurrentUser } from '@/src/utils'
 
 export default function LoginPage() {
 	const dispatch = useDispatch()
+	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const router = useRouter()
 	const provider = new GoogleAuthProvider()
 
@@ -25,7 +27,15 @@ export default function LoginPage() {
 			const auth = firebaseAuth
 			await setPersistence(auth, browserLocalPersistence)
 			const result = await signInWithPopup(auth, provider)
-			dispatch(setUser(result.user as User))
+
+			const user = {
+				uid: result.user.uid as string,
+				displayName: result.user.displayName as string,
+				email: result.user.email as string,
+				photoURL: result.user.photoURL as string,
+			}
+
+			dispatch(setUser(user))
 		} catch (error) {
 			console.error('Error signing in with Google', error)
 		}
@@ -33,7 +43,7 @@ export default function LoginPage() {
 
 	useEffect(() => {
 		verifyCurrentUser(router, '/')
-	}, [])
+	}, [currentUser])
 
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
