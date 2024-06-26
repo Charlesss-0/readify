@@ -1,4 +1,3 @@
-import { useAuthContext } from './authContext'
-import { useBookContext } from './bookContext'
+import { useAppContext } from './appContext'
 
-export { useAuthContext, useBookContext }
+export { useAppContext }

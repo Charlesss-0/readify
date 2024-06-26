@@ -1,49 +1,40 @@
 'use client'
 
-import {
-	GoogleAuthProvider,
-	User,
-	browserLocalPersistence,
-	setPersistence,
-	signInWithPopup,
-} from 'firebase/auth'
+import { RootState, authSlice } from '@/src/lib'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { RootState } from '@/src/lib'
-import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
-import { setUser } from '@/src/lib'
+import { User } from 'firebase/auth'
+import { setCurrentUserState } from '@/src/utils'
+import { useAppContext } from '@/src/context'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { verifyCurrentUser } from '@/src/utils'
 
 export default function LoginPage() {
-	const dispatch = useDispatch()
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const router = useRouter()
-	const provider = new GoogleAuthProvider()
+	const dispatch = useDispatch()
+	const { setUser } = authSlice.actions
+	const { currentUser } = useSelector((state: RootState) => state.auth)
+	const { firebaseAuth } = useAppContext()
 
 	const handleGoogleSignIn = async () => {
 		try {
-			const auth = firebaseAuth
-			await setPersistence(auth, browserLocalPersistence)
-			const result = await signInWithPopup(auth, provider)
+			const user: User | null = await firebaseAuth.signInWithGoogle()
 
-			const user = {
-				uid: result.user.uid as string,
-				displayName: result.user.displayName as string,
-				email: result.user.email as string,
-				photoURL: result.user.photoURL as string,
+			if (user) {
+				setCurrentUserState(user, (user: AuthState) =>
+					dispatch(setUser(user.currentUser))
+				)
 			}
-
-			localStorage.setItem('userUid', user.uid)
-			dispatch(setUser(user))
 		} catch (error) {
-			console.error('Error signing in with Google', error)
+			console.error('Error signing in with Google:', error)
 		}
 	}
 
 	useEffect(() => {
-		verifyCurrentUser(router, '/')
+		const checkCurrentUser = async () => {
+			await firebaseAuth.getCurrentUser(router)
+		}
+		checkCurrentUser()
 	}, [currentUser])
 
 	return (

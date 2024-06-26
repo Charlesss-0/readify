@@ -1,54 +1,68 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import {
+	type AppDispatch,
+	type RootState,
+	appSlice,
+	authSlice,
+	bookSlice,
+} from '@/src/lib'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { RootState } from '@/src/lib'
-import type { User } from 'firebase/auth'
-import { fetchBookCollection } from '@/src/utils'
-import { firebaseAuth } from '@/src/app/api/config/firebaseConfig'
-import { setUser } from '@/src/lib'
-import { useBookContext } from '@/src/context'
+import { useAppContext } from '../context'
 import { useRouter } from 'next/navigation'
+import { setCurrentUserState } from '../utils'
+import { User } from 'firebase/auth'
 
 export default function AppStateManager({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
-	const dispatch = useDispatch()
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
-	const { reader, setBook, setIsBookLoading } = useBookContext()
+	const dispatch = useDispatch<AppDispatch>()
+	const { currentUser } = useSelector((state: RootState) => state.auth)
+	const { awsClient, firebaseAuth } = useAppContext()
+	const { setAppState } = appSlice.actions
+	const { setUser } = authSlice.actions
+	const { setBooks, clearBooks } = bookSlice.actions
 
-	const setUserData = () => {
-		const auth = firebaseAuth
+	const verifyAndSetUserState = useCallback(async () => {
 		try {
-			auth.onAuthStateChanged((data: User | null) => {
-				if (!data) {
-					router.push('/auth/login')
-					return
-				}
+			const user: User | null = await firebaseAuth.getCurrentUser(router)
 
-				const user = {
-					uid: data.uid as string,
-					displayName: data.displayName as string,
-					email: data.email as string,
-					photoURL: data.photoURL as string,
-				}
-
-				localStorage.setItem('userUid', data.uid as string)
-				dispatch(setUser(user))
-			})
+			if (user) {
+				setCurrentUserState(user, (user: AuthState) =>
+					dispatch(setUser(user.currentUser))
+				)
+			}
 		} catch (e) {
-			console.error('Unable to verify user', e)
+			console.error('No user signed in', e)
 		}
-	}
+	}, [dispatch])
+
+	const fetchBooks = useCallback(async () => {
+		dispatch(setAppState('loading'))
+
+		try {
+			const books: Book[] | null = await awsClient.getBooks()
+
+			dispatch(setBooks(books))
+		} catch (e) {
+			console.error('Error fetching books in AppStateManager:', e)
+			dispatch(clearBooks())
+		} finally {
+			dispatch(setAppState('ready'))
+		}
+	}, [dispatch, currentUser])
 
 	useEffect(() => {
-		setUserData()
-	}, [])
-
-	useEffect(() => {
-		if (currentUser) {
-			fetchBookCollection(reader, setBook, setIsBookLoading)
+		const initializeAppState = async () => {
+			if (!currentUser) {
+				await verifyAndSetUserState()
+			} else {
+				await fetchBooks()
+			}
 		}
+
+		initializeAppState()
 	}, [currentUser])
 
 	return <>{children}</>

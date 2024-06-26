@@ -1,15 +1,11 @@
-interface DropdownContentProps {
-	items: ItemOption[]
-}
-
-export default function DropdownContent({ items }: DropdownContentProps) {
+export default function DropdownContent({ items }: { items: any }) {
 	return (
 		<>
 			<ul
 				tabIndex={0}
 				className="dropdown-content absolute w-full placeholder: mt-3 flex flex-col gap- p-2 rounded-lg bg-primary select-none border border-neutral"
 			>
-				{items.map((item, index) => (
+				{items.map((item: any, index: number) => (
 					<li
 						key={index}
 						onClick={item.action}

@@ -1,11 +1,12 @@
 'use client'
 
+import { AppDispatch, RootState, appSlice } from '@/src/lib'
 import { BookCollection, Header, Sidebar } from '@/src/components'
 import styled, { keyframes } from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 
-import { theme } from '../constants'
-import { useBookContext } from '../context'
+import { theme } from '@/src/constants'
 
 const loaderAnimation = keyframes`
 	0% {
@@ -69,20 +70,32 @@ const Loader = styled.div`
 `
 
 export default function Home() {
-	const { book, isBookLoading } = useBookContext()
-	const [pageState, setPageState] = useState<'loading' | 'ready'>('loading')
+	const dispatch = useDispatch<AppDispatch>()
+	const { book } = useSelector((state: RootState) => state.book)
+	const { appState } = useSelector((state: RootState) => state.app)
+	const { setAppState } = appSlice.actions
 
 	useEffect(() => {
-		if (isBookLoading) {
-			setPageState('loading')
-		} else if (book.length > 0) {
-			setPageState('ready')
+		if (appState === 'loading') {
+			dispatch(setAppState('loading'))
+		} else if (appState === 'ready' && !book?.length) {
+			dispatch(setAppState('ready'))
+		} else if (appState === 'ready' && book) {
+			dispatch(setAppState('ready'))
 		}
-	}, [isBookLoading])
+	}, [dispatch, appState])
 
 	return (
 		<>
-			{pageState === 'loading' ? (
+			{appState === 'ready' ? (
+				<>
+					<Header />
+					<Sidebar />
+					<main className="h-screen overflow-auto">
+						<BookCollection />
+					</main>
+				</>
+			) : (
 				<LoadingWrapper>
 					<Loader>
 						<div></div>
@@ -92,14 +105,6 @@ export default function Home() {
 						<div></div>
 					</Loader>
 				</LoadingWrapper>
-			) : (
-				<>
-					<Header />
-					<Sidebar />
-					<main className="h-screen overflow-auto">
-						<BookCollection />
-					</main>
-				</>
 			)}
 		</>
 	)

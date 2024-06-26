@@ -13,12 +13,12 @@ import {
 } from '@/src/assets/icons/icons'
 import { useMemo, useState } from 'react'
 
-import DropdownContent from './dropdownContent'
+import DropdownContent from './ui/dropdownContent'
 import { RootState } from '@/src/lib'
-import UploadBtn from './uploadBtn'
-import { signOut } from '@/src/utils'
+import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
 import { theme } from '@/src/constants'
+import { useAppContext } from '../context'
 import { useSelector } from 'react-redux'
 
 const Avatar = styled.div`
@@ -73,11 +73,12 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `
 
 export default function Sidebar() {
+	const { firebaseAuth } = useAppContext()
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 
-	const profileOptions: ItemOption[] = useMemo(
+	const profileOptions = useMemo(
 		() => [
 			{
 				item: 'Profile',
@@ -90,13 +91,13 @@ export default function Sidebar() {
 			{
 				item: 'Log out',
 				icon: <TbLogout />,
-				action: signOut,
+				action: async () => await firebaseAuth.logOut(),
 			},
 		],
 		[]
 	)
 
-	const sidebarItems: ItemOption[] = useMemo(
+	const sidebarItems = useMemo(
 		() => [
 			{
 				item: 'Recent',

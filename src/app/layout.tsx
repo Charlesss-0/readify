@@ -2,8 +2,7 @@ import './globals.css'
 
 import { AppStateManager, StyledComponentsRegistry } from '@/src/hoc'
 
-import { AuthContextProvider } from '@/src/context/authContext'
-import { BookContextProvider } from '@/src/context/bookContext'
+import { AppContextProvider } from '@/src/context/appContext'
 import Head from 'next/head'
 import { Metadata } from 'next'
 import StoreProvider from './storeProvider'
@@ -16,8 +15,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<StoreProvider>
-			<AuthContextProvider>
-				<BookContextProvider>
+			<AppContextProvider>
+				<AppStateManager>
 					<html lang="en" data-theme="appTheme">
 						<Head>
 							<meta charSet="UTF-8" />
@@ -28,13 +27,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								backgroundColor: theme['primary-content'],
 							}}
 						>
-							<AppStateManager>
-								<StyledComponentsRegistry>{children}</StyledComponentsRegistry>
-							</AppStateManager>
+							<StyledComponentsRegistry>{children}</StyledComponentsRegistry>
 						</body>
 					</html>
-				</BookContextProvider>
-			</AuthContextProvider>
+				</AppStateManager>
+			</AppContextProvider>
 		</StoreProvider>
 	)
 }

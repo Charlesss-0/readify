@@ -1,14 +1,15 @@
 'use client'
 
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import DropdownContent from './dropdownContent'
+import DropdownContent from './ui/dropdownContent'
 import { GrFavorite } from 'react-icons/gr'
 import { HiDownload } from 'react-icons/hi'
 import Link from 'next/link'
 import { LuTrash } from 'react-icons/lu'
+import { RootState } from '@/src/lib'
 import { devices } from '../constants'
 import styled from 'styled-components'
-import { useBookContext } from '@/src/context/bookContext'
+import { useSelector } from 'react-redux'
 
 const Collection = styled.div`
 	display: grid;
@@ -48,8 +49,8 @@ const Cover = styled.div`
 `
 
 export default function BookCollection() {
-	const { book } = useBookContext()
-	const bookOptions: ItemOption[] = [
+	const { book } = useSelector((state: RootState) => state.book)
+	const bookOptions = [
 		{
 			item: 'Add to favorites',
 			icon: <GrFavorite />,
