@@ -128,7 +128,7 @@ export default function LoginPage() {
 							<label htmlFor={item.name}>{item.text}</label>
 						</Field>
 					))}
-					<button className="p-2 rounded-md text-base-100 font-bold text-[1.1rem] bg-[#f50057] transition-all duration-200 hover:opacity-70 active:scale-95">
+					<button className="p-2 rounded-md text-base-100 font-bold text-[1.1rem] bg-[#f50057] transition-all duration-200 hover:bg-[#f50057ef] active:scale-95">
 						Sign Up
 					</button>
 				</form>

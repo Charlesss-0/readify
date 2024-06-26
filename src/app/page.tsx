@@ -4,9 +4,9 @@ import { AppDispatch, RootState, appSlice } from '@/src/lib'
 import { BookCollection, Header, Sidebar } from '@/src/components'
 import styled, { keyframes } from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
 
 import { theme } from '@/src/constants'
+import { useEffect } from 'react'
 
 const loaderAnimation = keyframes`
 	0% {
@@ -29,7 +29,7 @@ const LoadingWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: ${theme.primary};
+	background: ${theme['base-100']};
 `
 
 const Loader = styled.div`
@@ -41,7 +41,7 @@ const Loader = styled.div`
 	& > div {
 		width: 100%;
 		height: 100%;
-		background: #fff;
+		background: ${theme.primary};
 		position: absolute;
 		left: 50%;
 		transform-origin: left;
@@ -91,7 +91,7 @@ export default function Home() {
 				<>
 					<Header />
 					<Sidebar />
-					<main className="h-screen overflow-auto">
+					<main className="h-screen overflow-auto bg-base-100">
 						<BookCollection />
 					</main>
 				</>

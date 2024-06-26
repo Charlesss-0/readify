@@ -25,7 +25,7 @@ const config: Config = {
 					'primary-content': '#2f2f2f',
 
 					secondary: '#0068ff',
-					'secondary-content': '#d1e4ff',
+					'secondary-content': '#afafafaf',
 
 					neutral: '#5f5f5f',
 					'neutral-content': '#afafaf',

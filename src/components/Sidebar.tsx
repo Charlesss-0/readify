@@ -42,9 +42,11 @@ const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	left: 0;
 	top: 0;
 	height: 100vh;
+	width: 18rem;
 	transform: ${props => (props.$isOpen ? 'translateX(0%)' : 'translateX(-101%)')};
 	transition: transform 300ms;
-	background: ${theme['primary-content']};
+	background: ${theme['base-200']};
+	color: ${theme['primary']};
 	padding: 1rem;
 	z-index: 2;
 `
@@ -131,10 +133,10 @@ export default function Sidebar() {
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					className="h-6 w-6"
+					className="h-7 w-7"
 					fill="none"
 					viewBox="0 0 24 24"
-					stroke="currentColor"
+					stroke={theme.neutral}
 				>
 					<path
 						strokeLinecap="round"
@@ -146,10 +148,10 @@ export default function Sidebar() {
 			</button>
 
 			<SideDrawer $isOpen={isSidebarOpen}>
-				<details className="dropdown pt-12 text-base-100">
+				<details className="dropdown pt-12 text-primary">
 					<summary
 						onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-						className="flex items-center gap-3 p-1 px-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-neutral active:scale-[0.98]"
+						className="flex items-center justify-center gap-3 p-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-secondary-content active:scale-[0.98]"
 					>
 						{currentUser ? (
 							<>
@@ -182,7 +184,7 @@ export default function Sidebar() {
 					{sidebarItems.map((item, index) => (
 						<li
 							key={index}
-							className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 select-none cursor-pointer hover:bg-neutral active:scale-[0.98]"
+							className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 select-none cursor-pointer hover:bg-secondary-content active:scale-[0.98]"
 						>
 							{item.icon}
 							{item.item}

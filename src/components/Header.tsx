@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function Header() {
 	return (
-		<header className="flex bg-primary-content fixed top-0 left-0 w-full z-10">
+		<header className="flex bg-base-100 fixed top-0 left-0 w-full z-10">
 			<div className="flex justify-end w-full p-2 px-[1rem]">
 				<input
 					type="text"

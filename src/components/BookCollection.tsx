@@ -1,13 +1,15 @@
 'use client'
 
+import { devices, theme } from '../constants'
+
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import DropdownContent from './ui/dropdownContent'
+import Empty from '@/src/assets/images/home/empty'
 import { GrFavorite } from 'react-icons/gr'
 import { HiDownload } from 'react-icons/hi'
 import Link from 'next/link'
 import { LuTrash } from 'react-icons/lu'
 import { RootState } from '@/src/lib'
-import { devices } from '../constants'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
@@ -38,7 +40,7 @@ const BookItem = styled.div`
 const Cover = styled.div`
 	aspect-ratio: 1/1.5;
 	border-radius: 1rem;
-	box-shadow: 1px 1px 1rem 0 #000a;
+	border: 1.5px solid ${theme.neutral};
 	overflow: hidden;
 
 	& > img {
@@ -85,7 +87,7 @@ export default function BookCollection() {
 							</Link>
 
 							<div className="w-full flex items-center pt-3">
-								<h1 className="w-full text-center font-bold whitespace-nowrap text-ellipsis overflow-hidden">
+								<h1 className="w-full text-center text-neutral font-bold whitespace-nowrap text-ellipsis overflow-hidden">
 									{book.title}
 								</h1>
 
@@ -93,9 +95,9 @@ export default function BookCollection() {
 									<div
 										role="button"
 										tabIndex={0}
-										className="p-2 rounded-full hover:bg-neutral active:scale-95"
+										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content active:scale-95"
 									>
-										<BsThreeDotsVertical className="h-5 w-5" />
+										<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
 									</div>
 
 									<ul className="dropdown-content w-52">
@@ -107,7 +109,10 @@ export default function BookCollection() {
 					))}
 				</>
 			) : (
-				<h1>Add books...</h1>
+				<div className="bg-base-100 w-full h-screen flex flex-col items-center justify-end absolute top-0 left-0">
+					<h1 className="text-neutral text-[1.5rem] p-12">Your library is empty</h1>
+					<Empty className="w-[50%]" />
+				</div>
 			)}
 		</Collection>
 	)

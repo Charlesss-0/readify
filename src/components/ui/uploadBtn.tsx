@@ -21,7 +21,7 @@ export default function UploadBtn(): React.ReactElement {
 			<button
 				type="button"
 				onClick={() => inputRef.current?.click()}
-				className="btn btn-secondary w-full sm:btn-sm md:btn-md"
+				className="btn text-base-100 btn-secondary w-full sm:btn-sm md:btn-md"
 			>
 				Upload Book
 			</button>
