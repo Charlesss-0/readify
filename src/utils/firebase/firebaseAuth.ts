@@ -27,7 +27,7 @@ export default class FirebaseAuth {
 	}
 
 	private initialize(): FirebaseApp {
-		const firebaseConfig = {
+		return initializeApp({
 			apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
 			authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN as string,
 			databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL as string,
@@ -36,15 +36,7 @@ export default class FirebaseAuth {
 			messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
 			appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
 			measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID as string,
-		}
-
-		Object.keys(firebaseConfig).forEach(key => {
-			if (!firebaseConfig[key as keyof typeof firebaseConfig]) {
-				throw new Error(`Missing Firebase configuration for ${key}`)
-			}
 		})
-
-		return initializeApp(firebaseConfig)
 	}
 
 	public async signInWithGoogle(): Promise<User | null> {
