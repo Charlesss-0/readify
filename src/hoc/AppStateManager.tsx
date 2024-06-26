@@ -51,7 +51,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 		} finally {
 			dispatch(setAppState('ready'))
 		}
-	}, [dispatch, currentUser])
+	}, [dispatch])
 
 	useEffect(() => {
 		const initializeAppState = async () => {

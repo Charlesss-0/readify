@@ -27,8 +27,8 @@ const config: Config = {
 					secondary: '#0068ff',
 					'secondary-content': '#d1e4ff',
 
-					neutral: '#4f4f4f4f',
-					'neutral-content': '#cdcdcd5f',
+					neutral: '#5f5f5f',
+					'neutral-content': '#afafaf',
 
 					accent: '#2f2f2f3f',
 					'accent-secondary': '#efefef3f',

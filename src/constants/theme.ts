@@ -5,8 +5,8 @@ export const theme = {
 	secondary: '#0068ff',
 	'secondary-content': '#d1e4ff',
 
-	neutral: '#5f5f5f2f',
-	'neutral-content': '#cdcdcd5f',
+	neutral: '#5f5f5f',
+	'neutral-content': '#afafaf',
 
 	accent: '#2f2f2f3f',
 	'accent-secondary': '#efefef3f',
