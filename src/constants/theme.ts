@@ -2,8 +2,8 @@ export const theme = {
 	primary: '#1f1f1f',
 	'primary-content': '#2f2f2f',
 
-	secondary: '#0068ff',
-	'secondary-content': '#afafafaf',
+	secondary: '#f50057',
+	'secondary-content': '#bbb5',
 
 	neutral: '#5f5f5f',
 	'neutral-content': '#afafaf',

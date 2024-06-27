@@ -128,7 +128,7 @@ export default function LoginPage() {
 							<label htmlFor={item.name}>{item.text}</label>
 						</Field>
 					))}
-					<button className="p-2 rounded-md text-base-100 font-bold text-[1.1rem] bg-[#f50057] transition-all duration-200 hover:bg-[#f50057ef] active:scale-95">
+					<button className="btn btn-secondary text-base-100 font-bold text-[1.1rem] transition-all duration-100 active:scale-[0.98]">
 						Sign Up
 					</button>
 				</form>
@@ -144,7 +144,7 @@ export default function LoginPage() {
 						<button
 							key={index}
 							onClick={item.event}
-							className="p-3 rounded-full transition-all duration-200 bg-neutral-content hover:bg-base-200 hover:outline hover:outline-1 hover:outline-neutral-content active:scale-95 [&>*]:w-8 [&>*]:h-8"
+							className="p-3 rounded-full transition-all duration-100 bg-neutral-content hover:bg-base-200 hover:outline hover:outline-1 hover:outline-neutral-content active:scale-95 [&>*]:w-8 [&>*]:h-8"
 						>
 							{item.icon}
 						</button>

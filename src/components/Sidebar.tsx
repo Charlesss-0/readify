@@ -11,14 +11,14 @@ import {
 	PiBooks,
 	TbLogout,
 } from '@/src/assets/icons/icons'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import DropdownContent from './ui/dropdownContent'
 import { RootState } from '@/src/lib'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
 import { theme } from '@/src/constants'
-import { useAppContext } from '../context'
+import { useAppContext } from '@/src/context'
 import { useSelector } from 'react-redux'
 
 const Avatar = styled.div`
@@ -76,9 +76,25 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 
 export default function Sidebar() {
 	const { firebaseAuth } = useAppContext()
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser)
+	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+	const [formattedName, setFormattedName] = useState<string>('')
+
+	useEffect(() => {
+		const formatName = () => {
+			const name = currentUser?.displayName
+			const nameParts = name?.trim().split(/\s+/)
+			console.log(nameParts)
+
+			if (nameParts?.length === 4) {
+				setFormattedName(`${nameParts[0]} ${nameParts[2]}`)
+			}
+
+			setFormattedName(name as string)
+		}
+		formatName()
+	}, [currentUser])
 
 	const profileOptions = useMemo(
 		() => [
@@ -164,7 +180,7 @@ export default function Sidebar() {
 									/>
 								</Avatar>
 
-								<p className="font-bold">{currentUser.displayName}</p>
+								<p className="font-bold">{formattedName}</p>
 							</>
 						) : (
 							<>
