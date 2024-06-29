@@ -20,7 +20,6 @@ const Collection = styled.div`
 	gap: 2rem;
 	width: 100%;
 	padding: 1rem;
-	margin-top: 5rem;
 
 	@media only screen and ${devices.md} {
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

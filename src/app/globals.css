@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 :root {
-	--core-text-hex: #efefef;
+	--core-text-hex: #2f2f2f;
 	--core-select: #98abee55;
 }
 

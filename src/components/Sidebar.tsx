@@ -1,7 +1,6 @@
 'use client'
 
 import {
-	FiClock,
 	GrFavorite,
 	LuSettings,
 	LuUser2,
@@ -12,8 +11,10 @@ import {
 	TbLogout,
 } from '@/src/assets/icons/icons'
 import { useEffect, useMemo, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import DropdownContent from './ui/dropdownContent'
+import Link from 'next/link'
 import { RootState } from '@/src/lib'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
@@ -51,9 +52,50 @@ const SideDrawer = styled.div<{ $isOpen: boolean }>`
 	z-index: 2;
 `
 
+const UserBtn = styled.summary`
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	gap: 0.75rem;
+	padding: 0.5rem;
+	border-radius: 0.375rem;
+	transition: all 200ms;
+	cursor: pointer;
+	outline: none;
+	user-select: none;
+
+	&:hover {
+		background-color: ${theme['secondary-content']};
+	}
+
+	&:active {
+		transform: scale(0.98);
+	}
+`
+
 const SideSection = styled.ul`
 	display: flex;
 	flex-direction: column;
+`
+
+const SectionLink = styled.li<{ $active: boolean }>`
+	background-color: ${props => (props.$active ? `${theme['secondary-content']}` : '')};
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem;
+	border-radius: 0.375rem;
+	transition: all 200ms;
+	user-select: none;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${theme['secondary-content']};
+	}
+
+	&:active {
+		transform: scale(0.98);
+	}
 `
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
@@ -75,6 +117,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `
 
 export default function Sidebar() {
+	const pathName = usePathname()
 	const { firebaseAuth } = useAppContext()
 	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
@@ -85,7 +128,6 @@ export default function Sidebar() {
 		const formatName = () => {
 			const name = currentUser?.displayName
 			const nameParts = name?.trim().split(/\s+/)
-			console.log(nameParts)
 
 			if (nameParts?.length === 4) {
 				setFormattedName(`${nameParts[0]} ${nameParts[2]}`)
@@ -118,16 +160,14 @@ export default function Sidebar() {
 	const sidebarItems = useMemo(
 		() => [
 			{
-				item: 'Recent',
-				icon: <FiClock />,
-			},
-			{
 				item: 'Library',
 				icon: <PiBooks />,
+				route: '/library',
 			},
 			{
 				item: 'Favorites',
 				icon: <GrFavorite />,
+				route: '/favorites',
 			},
 		],
 		[]
@@ -165,16 +205,13 @@ export default function Sidebar() {
 
 			<SideDrawer $isOpen={isSidebarOpen}>
 				<details className="dropdown pt-12 text-primary">
-					<summary
-						onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-						className="flex items-center justify-center gap-3 p-2 rounded-md text-base transition-all duration-200 cursor-pointer outline-none select-none hover:bg-secondary-content active:scale-[0.98]"
-					>
+					<UserBtn onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
 						{currentUser ? (
 							<>
 								<Avatar>
 									<img
-										src={currentUser.photoURL!}
-										alt={currentUser.displayName!}
+										src={currentUser.photoURL}
+										alt={currentUser.displayName}
 										draggable={false}
 										loading="lazy"
 									/>
@@ -191,20 +228,19 @@ export default function Sidebar() {
 						)}
 
 						{isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-					</summary>
+					</UserBtn>
 
 					<DropdownContent items={profileOptions} />
 				</details>
 
 				<SideSection>
 					{sidebarItems.map((item, index) => (
-						<li
-							key={index}
-							className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 select-none cursor-pointer hover:bg-secondary-content active:scale-[0.98]"
-						>
-							{item.icon}
-							{item.item}
-						</li>
+						<Link key={index} href={item.route}>
+							<SectionLink $active={pathName === item.route}>
+								{item.icon}
+								{item.item}
+							</SectionLink>
+						</Link>
 					))}
 				</SideSection>
 

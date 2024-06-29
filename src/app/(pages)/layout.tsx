@@ -1,12 +1,12 @@
 'use client'
 
-import { AppDispatch, RootState, appSlice } from '@/src/lib'
-import { BookCollection, Header, Sidebar } from '@/src/components'
+import { Header, Sidebar } from '@/src/components'
 import styled, { keyframes } from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
 
+import React from 'react'
+import { RootState } from '@/src/lib'
 import { theme } from '@/src/constants'
-import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 const loaderAnimation = keyframes`
 	0% {
@@ -25,7 +25,7 @@ const loaderAnimation = keyframes`
 
 const LoadingWrapper = styled.div`
 	width: 100%;
-	height: 100vh;
+	height: 90vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -69,21 +69,8 @@ const Loader = styled.div`
 	}
 `
 
-export default function Home() {
-	const dispatch = useDispatch<AppDispatch>()
-	const { book } = useSelector((state: RootState) => state.book)
+export default function LibraryLayout({ children }: { children: React.ReactNode }) {
 	const { appState } = useSelector((state: RootState) => state.app)
-	const { setAppState } = appSlice.actions
-
-	useEffect(() => {
-		if (appState === 'loading') {
-			dispatch(setAppState('loading'))
-		} else if (appState === 'ready' && !book?.length) {
-			dispatch(setAppState('ready'))
-		} else if (appState === 'ready' && book) {
-			dispatch(setAppState('ready'))
-		}
-	}, [dispatch, appState])
 
 	return (
 		<>
@@ -91,20 +78,20 @@ export default function Home() {
 				<>
 					<Header />
 					<Sidebar />
-					<main className="h-screen overflow-auto bg-base-100">
-						<BookCollection />
-					</main>
+					<section>{children}</section>
 				</>
 			) : (
-				<LoadingWrapper>
-					<Loader>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-					</Loader>
-				</LoadingWrapper>
+				<>
+					<LoadingWrapper>
+						<Loader>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</Loader>
+					</LoadingWrapper>
+				</>
 			)}
 		</>
 	)

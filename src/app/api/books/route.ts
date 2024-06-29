@@ -5,7 +5,7 @@ import {
 } from '@aws-sdk/client-s3'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import s3 from '@/src/app/api/config/aws.config'
+import s3 from '../config/aws.config'
 
 const Bucket = process.env.S3_BUCKET_NAME as string
 
