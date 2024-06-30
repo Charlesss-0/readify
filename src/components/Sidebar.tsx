@@ -10,16 +10,15 @@ import {
 	PiBooks,
 	TbLogout,
 } from '@/src/assets/icons/icons'
+import { ItemListContainer, theme } from '@/src/constants'
 import { useEffect, useMemo, useState } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import DropdownContent from './ui/dropdownContent'
 import Link from 'next/link'
 import { RootState } from '@/src/lib'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
-import { theme } from '@/src/constants'
 import { useAppContext } from '@/src/context'
+import { usePathname } from 'next/navigation'
 import { useSelector } from 'react-redux'
 
 const Avatar = styled.div`
@@ -141,15 +140,22 @@ export default function Sidebar() {
 	const profileOptions = useMemo(
 		() => [
 			{
-				item: 'Profile',
+				text: 'Profile',
 				icon: <LuUser2 />,
+				action: () => {
+					const modal = document.getElementById('profile_modal') as HTMLDialogElement
+					if (modal) {
+						modal.showModal()
+					}
+				},
 			},
 			{
-				item: 'Settings',
+				text: 'Settings',
 				icon: <LuSettings />,
+				action: () => {},
 			},
 			{
-				item: 'Log out',
+				text: 'Log out',
 				icon: <TbLogout />,
 				action: async () => await firebaseAuth.logOut(),
 			},
@@ -160,12 +166,12 @@ export default function Sidebar() {
 	const sidebarItems = useMemo(
 		() => [
 			{
-				item: 'Library',
+				text: 'Library',
 				icon: <PiBooks />,
 				route: '/library',
 			},
 			{
-				item: 'Favorites',
+				text: 'Favorites',
 				icon: <GrFavorite />,
 				route: '/favorites',
 			},
@@ -230,7 +236,18 @@ export default function Sidebar() {
 						{isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
 					</UserBtn>
 
-					<DropdownContent items={profileOptions} />
+					<ItemListContainer tabIndex={0} className="dropdown-content">
+						{profileOptions.map((item: any, index: number) => (
+							<li
+								key={index}
+								onClick={item.action}
+								className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-secondary-content text-primary active:scale-[0.98]"
+							>
+								{item.icon}
+								{item.text}
+							</li>
+						))}
+					</ItemListContainer>
 				</details>
 
 				<SideSection>
@@ -238,7 +255,7 @@ export default function Sidebar() {
 						<Link key={index} href={item.route}>
 							<SectionLink $active={pathName === item.route}>
 								{item.icon}
-								{item.item}
+								{item.text}
 							</SectionLink>
 						</Link>
 					))}
@@ -248,6 +265,41 @@ export default function Sidebar() {
 			</SideDrawer>
 
 			<Overlay $isOpen={isSidebarOpen} onClick={toggleDrawer} />
+
+			{/* profile modal */}
+			<dialog id="profile_modal" className="modal">
+				<div className="modal-box bg-base-100">
+					<div className="modal-action">
+						<form method="dialog">
+							<button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+								✕
+							</button>
+						</form>
+					</div>
+
+					<div className="flex flex-col gap-10 items-center">
+						{currentUser && (
+							<>
+								<img
+									src={currentUser.photoURL}
+									alt={currentUser.displayName}
+									className="w-28 rounded-full"
+								/>
+
+								<div className="w-full">
+									<p>Your name</p>
+									<p className="text-[1.3rem]">{currentUser.displayName}</p>
+								</div>
+
+								<div className="w-full">
+									<p>Your email</p>
+									<p className="text-[1.3rem]">{currentUser.email}</p>
+								</div>
+							</>
+						)}
+					</div>
+				</div>
+			</dialog>
 		</Aside>
 	)
 }

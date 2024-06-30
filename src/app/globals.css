@@ -7,6 +7,10 @@
 	--core-select: #98abee55;
 }
 
+:root:has(:is(.modal-open, .modal:target, .modal-toggle:checked + .modal, .modal[open])) {
+	scrollbar-gutter: unset;
+}
+
 body {
 	color: var(--core-text-hex);
 }

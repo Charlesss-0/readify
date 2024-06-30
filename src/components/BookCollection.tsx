@@ -16,10 +16,12 @@ import { useSelector } from 'react-redux'
 const Collection = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	justify-content: center;
+	align-items: start;
 	gap: 2rem;
 	width: 100%;
+	height: 100vh;
 	padding: 1rem;
+	padding-top: 5rem;
 
 	@media only screen and ${devices.md} {
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

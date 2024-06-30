@@ -46,7 +46,7 @@ const Field = styled.fieldset`
 	}
 `
 
-export default function LoginPage() {
+export default function SignUpPage() {
 	const router = useRouter()
 	const dispatch = useDispatch()
 	const { setUser } = authSlice.actions

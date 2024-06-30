@@ -3,7 +3,7 @@ export default function DropdownContent({ items }: { items: any }) {
 		<>
 			<ul
 				tabIndex={0}
-				className="dropdown-content absolute w-full placeholder: mt-3 flex flex-col gap- p-2 rounded-lg bg-base-200 select-none border border-neutral"
+				className="dropdown-content absolute w-full mt-3 flex flex-col p-2 rounded-lg bg-base-200 select-none border border-neutral"
 			>
 				{items.map((item: any, index: number) => (
 					<li
