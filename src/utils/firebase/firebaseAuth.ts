@@ -67,7 +67,7 @@ export default class FirebaseAuth {
 			try {
 				this.auth.onAuthStateChanged((user: User | null) => {
 					if (!user) {
-						router.push('/auth/signUp')
+						router.push('/auth/register')
 						resolve(null)
 						return
 					}

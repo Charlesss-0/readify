@@ -1,5 +1,6 @@
-import { ItemListContainer } from './styledComponents'
+import { ListItem, ListItemContainer } from './styledComponents'
+
 import { devices } from './devices'
 import { theme } from './theme'
 
-export { devices, theme, ItemListContainer }
+export { devices, theme, ListItemContainer, ListItem }

@@ -10,11 +10,13 @@ import {
 	PiBooks,
 	TbLogout,
 } from '@/src/assets/icons/icons'
-import { ItemListContainer, theme } from '@/src/constants'
+import { ListItem, ListItemContainer, theme } from '@/src/constants'
 import { useEffect, useMemo, useState } from 'react'
 
 import Link from 'next/link'
+import Profile from './Profile'
 import { RootState } from '@/src/lib'
+import Settings from './Settings'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
 import { useAppContext } from '@/src/context'
@@ -152,7 +154,12 @@ export default function Sidebar() {
 			{
 				text: 'Settings',
 				icon: <LuSettings />,
-				action: () => {},
+				action: () => {
+					const modal = document.getElementById('settings_modal') as HTMLDialogElement
+					if (modal) {
+						modal.showModal()
+					}
+				},
 			},
 			{
 				text: 'Log out',
@@ -236,18 +243,14 @@ export default function Sidebar() {
 						{isDropdownOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
 					</UserBtn>
 
-					<ItemListContainer tabIndex={0} className="dropdown-content">
+					<ListItemContainer tabIndex={0} className="dropdown-content">
 						{profileOptions.map((item: any, index: number) => (
-							<li
-								key={index}
-								onClick={item.action}
-								className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-secondary-content text-primary active:scale-[0.98]"
-							>
+							<ListItem key={index} onClick={item.action}>
 								{item.icon}
 								{item.text}
-							</li>
+							</ListItem>
 						))}
-					</ItemListContainer>
+					</ListItemContainer>
 				</details>
 
 				<SideSection>
@@ -267,39 +270,10 @@ export default function Sidebar() {
 			<Overlay $isOpen={isSidebarOpen} onClick={toggleDrawer} />
 
 			{/* profile modal */}
-			<dialog id="profile_modal" className="modal">
-				<div className="modal-box bg-base-100">
-					<div className="modal-action">
-						<form method="dialog">
-							<button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-								✕
-							</button>
-						</form>
-					</div>
+			<Profile />
 
-					<div className="flex flex-col gap-10 items-center">
-						{currentUser && (
-							<>
-								<img
-									src={currentUser.photoURL}
-									alt={currentUser.displayName}
-									className="w-28 rounded-full"
-								/>
-
-								<div className="w-full">
-									<p>Your name</p>
-									<p className="text-[1.3rem]">{currentUser.displayName}</p>
-								</div>
-
-								<div className="w-full">
-									<p>Your email</p>
-									<p className="text-[1.3rem]">{currentUser.email}</p>
-								</div>
-							</>
-						)}
-					</div>
-				</div>
-			</dialog>
+			{/* settings modal */}
+			<Settings />
 		</Aside>
 	)
 }
