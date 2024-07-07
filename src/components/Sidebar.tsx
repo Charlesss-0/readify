@@ -2,7 +2,6 @@
 
 import {
 	GrFavorite,
-	LuSettings,
 	LuUser2,
 	LuUserCircle,
 	MdKeyboardArrowDown,
@@ -16,7 +15,6 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Profile from './Profile'
 import { RootState } from '@/src/lib'
-import Settings from './Settings'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
 import { useAppContext } from '@/src/context'
@@ -152,16 +150,6 @@ export default function Sidebar() {
 				},
 			},
 			{
-				text: 'Settings',
-				icon: <LuSettings />,
-				action: () => {
-					const modal = document.getElementById('settings_modal') as HTMLDialogElement
-					if (modal) {
-						modal.showModal()
-					}
-				},
-			},
-			{
 				text: 'Log out',
 				icon: <TbLogout />,
 				action: async () => await firebaseAuth.logOut(),
@@ -271,9 +259,6 @@ export default function Sidebar() {
 
 			{/* profile modal */}
 			<Profile />
-
-			{/* settings modal */}
-			<Settings />
 		</Aside>
 	)
 }
