@@ -55,7 +55,6 @@ export async function GET(req: Request) {
 		return Response.json(signedUrls, {
 			status: 200,
 			headers: {
-				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': '*',
 				'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
 				'Access-Control-Allow-Headers': 'Content-Type,Authorization',
@@ -80,16 +79,15 @@ export async function POST(req: Request) {
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
-		const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`
+		const uniqueFileName = `${Date.now()}-${Math.random()
+			.toString(36)
+			.substring(2, 15)}.epub`
 		const Key = `${userUid}/${uniqueFileName}`
 
 		const uploadParams = {
 			Bucket,
 			Key,
 			Body,
-			Metadata: {
-				originalFileName: file.name,
-			},
 		}
 
 		const data = await s3.send(new PutObjectCommand(uploadParams))
@@ -99,7 +97,6 @@ export async function POST(req: Request) {
 			{
 				status: 200,
 				headers: {
-					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
 					'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
 					'Access-Control-Allow-Headers': 'Content-Type,Authorization',
@@ -135,7 +132,6 @@ export async function DELETE(req: Request) {
 			{
 				status: 200,
 				headers: {
-					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
 					'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
 					'Access-Control-Allow-Headers': 'Content-Type,Authorization',

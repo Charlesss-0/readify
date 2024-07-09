@@ -1,22 +1,22 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface BookState {
-	book: Book[] | null
+	books: Book[] | null
 }
 
 const initialState: BookState = {
-	book: null,
+	books: null,
 }
 
 const bookSlice = createSlice({
 	name: 'book',
 	initialState,
 	reducers: {
-		setBooks: (state, action: PayloadAction<BookState['book']>) => {
-			state.book = action.payload
+		setBooks: (state, action: PayloadAction<BookState['books']>) => {
+			state.books = action.payload
 		},
 		clearBooks: state => {
-			state.book = null
+			state.books = null
 		},
 	},
 })

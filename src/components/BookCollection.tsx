@@ -1,6 +1,6 @@
 'use client'
 
-import { AppDispatch, RootState, bookSlice } from '@/src/lib'
+import { AppDispatch, RootState, appSlice, bookSlice } from '@/src/lib'
 import { devices, theme } from '../constants'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -55,7 +55,8 @@ const Cover = styled.div`
 export default function BookCollection() {
 	const { awsClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
-	const { book } = useSelector((state: RootState) => state.book)
+	const { setFileState } = appSlice.actions
+	const { books } = useSelector((state: RootState) => state.book)
 	const { setBooks } = bookSlice.actions
 	const [bookToDelete, setBookToDelete] = useState<string>('')
 
@@ -74,8 +75,18 @@ export default function BookCollection() {
 			icon: <LuTrash />,
 			action: async () => {
 				try {
+					dispatch(setFileState('deleting'))
 					await awsClient.removeObject(bookToDelete)
-					alert('File deleted successfully')
+
+					dispatch(setFileState('deleted'))
+
+					const newBookList: Book[] | null = books
+						? books.filter(book => book.id.replace(/^[^/]+\//, '') !== bookToDelete)
+						: null
+
+					if (newBookList) {
+						dispatch(setBooks(newBookList))
+					}
 				} catch (e) {
 					console.error('Error deleting book', e)
 				}
@@ -89,9 +100,9 @@ export default function BookCollection() {
 
 	return (
 		<Collection>
-			{book && book.length > 0 ? (
+			{books && books.length > 0 ? (
 				<>
-					{book.map(book => (
+					{books.map(book => (
 						<BookItem key={book.id}>
 							<Link
 								href={`/book/${book.title.replace(/\s+/g, '_')}`}

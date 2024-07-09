@@ -17,13 +17,14 @@ export default function Book() {
 	const rendition = useRef<Rendition | undefined>(undefined)
 
 	const getBookUrl = async () => {
-		const bookUrl = localStorage.getItem('bookUrl')
-		if (!bookUrl) {
-			console.error('No book url has been defined')
-			return
-		}
-
 		try {
+			const bookUrl = localStorage.getItem('bookUrl')
+
+			if (!bookUrl) {
+				console.error('No book url has been defined')
+				return
+			}
+
 			setCurrentBook(bookUrl)
 		} catch (error: any) {
 			console.error('Error reading book', error.message)
@@ -46,8 +47,12 @@ export default function Book() {
 	}
 
 	useEffect(() => {
-		getBookUrl()
-		setFontSize()
+		const setBookState = async () => {
+			await getBookUrl()
+			setFontSize()
+		}
+		setBookState()
+
 		window.addEventListener('resize', setFontSize)
 
 		return () => window.removeEventListener('resize', setFontSize)

@@ -42,6 +42,7 @@ export default class AWSClient {
 				)
 
 				resolve(books)
+				console.log(books)
 			} catch (e) {
 				console.error('Error fetching books', e)
 				reject(e)
@@ -80,9 +81,8 @@ export default class AWSClient {
 
 			if (!response.ok) {
 				console.error('Failed to upload file')
+				return
 			}
-
-			alert('File uploaded successfully!')
 		} catch (e: any) {
 			console.error('Error uploading file', e)
 		}
