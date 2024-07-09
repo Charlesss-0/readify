@@ -111,7 +111,6 @@ export default class AWSClient {
 
 				const data = await response.json()
 				resolve(data)
-				console.log(data)
 			} catch (e) {
 				console.error('Error deleting object:', e)
 				reject(e)

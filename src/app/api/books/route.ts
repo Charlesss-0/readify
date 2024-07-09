@@ -79,17 +79,8 @@ export async function POST(req: Request) {
 			)
 		}
 
-		const uniqueFileName = file.name.replace(/\s+/g, '_')
-
-		const currentFilesResponse = await s3.send(new ListObjectsCommand({ Bucket }))
-		const contents = currentFilesResponse.contents ?? []
-		const existingFile = contents.find((item: any) => item.Key.includes(uniqueFileName))
-
-		if (existingFile) {
-			return Response.json({ message: 'File already exists' }, { status: 409 })
-		}
-
 		const Body = Buffer.from(await file.arrayBuffer())
+		const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`
 		const Key = `${userUid}/${uniqueFileName}`
 
 		const uploadParams = {

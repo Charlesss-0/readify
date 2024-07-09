@@ -75,6 +75,7 @@ export default function BookCollection() {
 			action: async () => {
 				try {
 					await awsClient.removeObject(bookToDelete)
+					alert('File deleted successfully')
 				} catch (e) {
 					console.error('Error deleting book', e)
 				}
