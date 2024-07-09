@@ -87,4 +87,35 @@ export default class AWSClient {
 			console.error('Error uploading file', e)
 		}
 	}
+
+	public removeObject(bookToDelete: string): Promise<Book[] | null> {
+		return new Promise(async (resolve, reject) => {
+			const userUid = localStorage.getItem('userUid')
+			if (!userUid) {
+				console.error('User UID not defined')
+				reject()
+			}
+
+			try {
+				const response = await fetch(
+					`/api/books?userUid=${userUid}&bookId=${bookToDelete}`,
+					{
+						method: 'DELETE',
+					}
+				)
+				if (!response.ok) {
+					console.error('Failed to fetch books', response)
+					reject('Failed to delete book')
+					return
+				}
+
+				const data = await response.json()
+				resolve(data)
+				console.log(data)
+			} catch (e) {
+				console.error('Error deleting object:', e)
+				reject(e)
+			}
+		})
+	}
 }

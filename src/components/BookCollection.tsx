@@ -1,17 +1,18 @@
 'use client'
 
+import { AppDispatch, RootState, bookSlice } from '@/src/lib'
 import { devices, theme } from '../constants'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import DropdownContent from './ui/dropdownContent'
 import Empty from '@/src/assets/images/home/empty'
 import { GrFavorite } from 'react-icons/gr'
 import { HiDownload } from 'react-icons/hi'
 import Link from 'next/link'
 import { LuTrash } from 'react-icons/lu'
-import { RootState } from '@/src/lib'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import { useAppContext } from '../context'
+import { useState } from 'react'
 
 const Collection = styled.div`
 	display: grid;
@@ -52,19 +53,32 @@ const Cover = styled.div`
 `
 
 export default function BookCollection() {
+	const { awsClient } = useAppContext()
+	const dispatch = useDispatch<AppDispatch>()
 	const { book } = useSelector((state: RootState) => state.book)
+	const { setBooks } = bookSlice.actions
+	const [bookToDelete, setBookToDelete] = useState<string>('')
+
 	const bookOptions = [
 		{
-			item: 'Add to favorites',
+			text: 'Add to favorites',
 			icon: <GrFavorite />,
+			action: () => {},
 		},
 		{
-			item: 'Download',
+			text: 'Download',
 			icon: <HiDownload />,
 		},
 		{
-			item: 'Delete',
+			text: 'Delete',
 			icon: <LuTrash />,
+			action: async () => {
+				try {
+					await awsClient.removeObject(bookToDelete)
+				} catch (e) {
+					console.error('Error deleting book', e)
+				}
+			},
 		},
 	]
 
@@ -96,13 +110,26 @@ export default function BookCollection() {
 									<div
 										role="button"
 										tabIndex={0}
-										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content active:scale-95"
+										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content"
+										onClick={() => setBookToDelete(book.id.replace(/^[^/]+\//, ''))}
 									>
 										<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
 									</div>
 
-									<ul className="dropdown-content w-52">
-										<DropdownContent items={bookOptions} />
+									<ul
+										tabIndex={0}
+										className="dropdown-content w-max absolute mt-3 flex flex-col p-2 rounded-lg bg-base-200 select-none border border-neutral"
+									>
+										{bookOptions.map((item: any, index: number) => (
+											<li
+												key={index}
+												onClick={item.action}
+												className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-secondary-content text-primary active:scale-[0.98]"
+											>
+												{item.icon}
+												{item.text}
+											</li>
+										))}
 									</ul>
 								</div>
 							</div>

@@ -1,4 +1,5 @@
 import {
+	DeleteObjectCommand,
 	GetObjectCommand,
 	ListObjectsCommand,
 	PutObjectCommand,
@@ -51,12 +52,15 @@ export async function GET(req: Request) {
 			})
 		)
 
-		const res = Response.json(signedUrls)
-		res.headers.set('Access-Control-Allow-Origin', '*')
-		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
-		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-
-		return res
+		return Response.json(signedUrls, {
+			status: 200,
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+				'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+			},
+		})
 	} catch (error: any) {
 		return Response.json({ message: error.message }, { status: 500 })
 	}
@@ -68,27 +72,85 @@ export async function POST(req: Request) {
 		const file = formData.get('file') as File
 		const userUid = formData.get('userUid') as string
 
-		if (!file) {
-			return Response.json({ error: 'No file provided' }, { status: 400 })
+		if (!file || !userUid) {
+			return Response.json(
+				{ error: 'Upload parameters not met: missing file or UID' },
+				{ status: 400 }
+			)
 		}
 
-		if (!userUid) {
-			return Response.json({ error: 'No user uid provided' }, { status: 400 })
+		const uniqueFileName = file.name.replace(/\s+/g, '_')
+
+		const currentFilesResponse = await s3.send(new ListObjectsCommand({ Bucket }))
+		const contents = currentFilesResponse.contents ?? []
+		const existingFile = contents.find((item: any) => item.Key.includes(uniqueFileName))
+
+		if (existingFile) {
+			return Response.json({ message: 'File already exists' }, { status: 409 })
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
-		const Key = `${userUid}/${Date.now().toString()}-${file.name}`
+		const Key = `${userUid}/${uniqueFileName}`
 
-		const uploadParams = { Bucket, Key, Body }
+		const uploadParams = {
+			Bucket,
+			Key,
+			Body,
+			Metadata: {
+				originalFileName: file.name,
+			},
+		}
 
 		const data = await s3.send(new PutObjectCommand(uploadParams))
 
-		const res = Response.json({ message: 'File uploaded successfully', data })
-		res.headers.set('Access-Control-Allow-Origin', '*')
-		res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS')
-		res.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+		return Response.json(
+			{ message: 'File uploaded successfully', data },
+			{
+				status: 200,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+				},
+			}
+		)
+	} catch (error: any) {
+		return Response.json({ message: error.message }, { status: 500 })
+	}
+}
 
-		return res
+export async function DELETE(req: Request) {
+	const url = new URL(req.url)
+	const userUid = url.searchParams.get('userUid')
+	const bookId = url.searchParams.get('bookId')
+
+	if (!userUid || !bookId) {
+		return Response.json({ message: 'Missing parameters' }, { status: 400 })
+	}
+
+	const Key = `${userUid}/${bookId}`
+
+	const command = new DeleteObjectCommand({
+		Bucket,
+		Key,
+	})
+
+	try {
+		const response = await s3.send(command)
+
+		return Response.json(
+			{ message: 'File deleted successfully', response },
+			{
+				status: 200,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+				},
+			}
+		)
 	} catch (error: any) {
 		return Response.json({ message: error.message }, { status: 500 })
 	}

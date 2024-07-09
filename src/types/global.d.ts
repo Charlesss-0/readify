@@ -13,6 +13,7 @@ declare global {
 	interface AWSInstance {
 		getBooks: () => Promise<Book[] | null>
 		uploadFile: (e: React.ChangeEvent<HTMLInputElement>) => void
+		removeObject: (bookToDelete: string) => Promise<Book[] | null>
 	}
 
 	interface FirebaseAuthInstance {
