@@ -117,7 +117,7 @@ export default class AWSClient {
 		})
 	}
 
-	public downloadFile(title: string, url: string): void {
+	public async downloadFile(title: string, url: string): Promise<void> {
 		try {
 			if (!title || !url) {
 				console.log('Failed to fetch file')

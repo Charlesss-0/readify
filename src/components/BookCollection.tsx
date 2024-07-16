@@ -69,7 +69,7 @@ export default function BookCollection() {
 		{
 			text: 'Download',
 			icon: <HiDownload />,
-			action: () => {
+			action: async () => {
 				try {
 					const bookObj: Book[] | null = books
 						? books.filter(book => bookId === book.id.replace(/^[^/]+\//, ''))
@@ -79,7 +79,7 @@ export default function BookCollection() {
 						const url = bookObj[0].url
 						const title = bookObj[0].title
 
-						awsClient.downloadFile(title, url)
+						await awsClient.downloadFile(title, url)
 					}
 
 					dispatch(setFileState('downloaded'))
