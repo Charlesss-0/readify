@@ -13,6 +13,10 @@
 
 body {
 	color: var(--core-text-hex);
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 ::selection {
