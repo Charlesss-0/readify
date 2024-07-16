@@ -58,7 +58,7 @@ export default function BookCollection() {
 	const { setFileState } = appSlice.actions
 	const { books } = useSelector((state: RootState) => state.book)
 	const { setBooks } = bookSlice.actions
-	const [bookToDelete, setBookToDelete] = useState<string>('')
+	const [bookId, setBookId] = useState<string>('')
 
 	const bookOptions = [
 		{
@@ -69,6 +69,24 @@ export default function BookCollection() {
 		{
 			text: 'Download',
 			icon: <HiDownload />,
+			action: () => {
+				try {
+					const bookObj: Book[] | null = books
+						? books.filter(book => bookId === book.id.replace(/^[^/]+\//, ''))
+						: null
+
+					if (bookObj) {
+						const url = bookObj[0].url
+						const title = bookObj[0].title
+
+						awsClient.downloadFile(title, url)
+					}
+
+					dispatch(setFileState('downloaded'))
+				} catch (error) {
+					console.log('Unable to download file:', error)
+				}
+			},
 		},
 		{
 			text: 'Delete',
@@ -76,12 +94,12 @@ export default function BookCollection() {
 			action: async () => {
 				try {
 					dispatch(setFileState('deleting'))
-					await awsClient.removeObject(bookToDelete)
+					await awsClient.removeObject(bookId)
 
 					dispatch(setFileState('deleted'))
 
 					const newBookList: Book[] | null = books
-						? books.filter(book => book.id.replace(/^[^/]+\//, '') !== bookToDelete)
+						? books.filter(book => book.id.replace(/^[^/]+\//, '') !== bookId)
 						: null
 
 					if (newBookList) {
@@ -123,7 +141,7 @@ export default function BookCollection() {
 										role="button"
 										tabIndex={0}
 										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content"
-										onClick={() => setBookToDelete(book.id.replace(/^[^/]+\//, ''))}
+										onClick={() => setBookId(book.id.replace(/^[^/]+\//, ''))}
 									>
 										<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
 									</div>

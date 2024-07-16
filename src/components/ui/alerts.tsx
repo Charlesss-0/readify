@@ -31,13 +31,13 @@ export default function Alerts() {
 	const [showAlert, setShowAlert] = useState<boolean>(false)
 
 	const setAlertState = useCallback(() => {
-		if (fileState === 'uploaded' || fileState === 'deleted') {
+		if (fileState) {
 			setShowAlert(true)
 
 			const timer = setTimeout(() => {
 				dispatch(setFileState(null))
 				setShowAlert(false)
-			}, 3000)
+			}, 4000)
 
 			return () => clearTimeout(timer)
 		}

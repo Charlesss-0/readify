@@ -42,7 +42,6 @@ export default class AWSClient {
 				)
 
 				resolve(books)
-				console.log(books)
 			} catch (e) {
 				console.error('Error fetching books', e)
 				reject(e)
@@ -116,5 +115,25 @@ export default class AWSClient {
 				reject(e)
 			}
 		})
+	}
+
+	public downloadFile(title: string, url: string): void {
+		try {
+			if (!title || !url) {
+				console.log('Failed to fetch file')
+				return
+			}
+
+			const a = document.createElement('a')
+			a.href = url
+			a.download = title
+
+			a.style.display = 'none'
+			document.body.appendChild(a)
+			a.click()
+			document.body.removeChild(a)
+		} catch (error) {
+			console.log('Error downloading file:', error)
+		}
 	}
 }
