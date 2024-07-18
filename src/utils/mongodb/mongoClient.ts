@@ -24,6 +24,9 @@ export default class MongoClient {
 			try {
 				const response = await fetch(`/api/favorites?userUid=${userUid}`, {
 					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+					},
 				})
 
 				if (!response.ok) {
@@ -33,7 +36,6 @@ export default class MongoClient {
 
 				const data = await response.json()
 				resolve(data)
-				console.log(data)
 			} catch (error) {
 				console.error('Unable to fetch books:', error)
 				reject(null)

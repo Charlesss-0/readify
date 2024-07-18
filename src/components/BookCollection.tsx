@@ -72,7 +72,6 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 					if (bookObj) {
 						await mongoClient.addToFavorites(bookObj)
 						dispatch(setFileState('added to favorites'))
-						console.log('Book added to favorites successfully!')
 					}
 				} catch (error) {
 					console.log('Unable to add book to favorites', error)
