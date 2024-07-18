@@ -52,11 +52,10 @@ const Cover = styled.div`
 	}
 `
 
-export default function BookCollection() {
-	const { awsClient } = useAppContext()
+export default function BookCollection({ books }: { books: Book[] | null }) {
+	const { awsClient, mongoClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
 	const { setFileState } = appSlice.actions
-	const { books } = useSelector((state: RootState) => state.book)
 	const { setBooks } = bookSlice.actions
 	const [bookId, setBookId] = useState<string>('')
 
@@ -64,7 +63,21 @@ export default function BookCollection() {
 		{
 			text: 'Add to favorites',
 			icon: <GrFavorite />,
-			action: () => {},
+			action: async () => {
+				try {
+					const bookObj: Book[] | null = books
+						? books.filter(book => bookId === book.id.replace(/^[^/]+\//, ''))
+						: null
+
+					if (bookObj) {
+						await mongoClient.addToFavorites(bookObj)
+						dispatch(setFileState('added to favorites'))
+						console.log('Book added to favorites successfully!')
+					}
+				} catch (error) {
+					console.log('Unable to add book to favorites', error)
+				}
+			},
 		},
 		{
 			text: 'Download',
@@ -93,7 +106,6 @@ export default function BookCollection() {
 			icon: <LuTrash />,
 			action: async () => {
 				try {
-					dispatch(setFileState('deleting'))
 					await awsClient.removeObject(bookId)
 
 					dispatch(setFileState('deleted'))

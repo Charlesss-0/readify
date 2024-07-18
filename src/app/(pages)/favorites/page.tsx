@@ -1,7 +1,15 @@
+'use client'
+
+import { BookCollection } from '@/src/components'
+import { RootState } from '@/src/lib'
+import { useSelector } from 'react-redux'
+
 export default function Favorites() {
+	const { favorites } = useSelector((state: RootState) => state.book)
+
 	return (
-		<div className="pt-20 p-2 h-screen">
-			<h1 className="">Welcome to favorites page</h1>
+		<div>
+			<BookCollection books={favorites} />
 		</div>
 	)
 }

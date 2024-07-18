@@ -21,8 +21,6 @@ export default function UploadBtn(): React.ReactElement {
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		try {
-			dispatch(setFileState('uploading'))
-
 			if (e.target.files) {
 				await awsClient.uploadFile(e)
 				dispatch(setFileState('uploaded'))

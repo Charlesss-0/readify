@@ -18,11 +18,13 @@ import { User } from 'firebase/auth'
 export default function AppStateManager({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
 	const dispatch = useDispatch<AppDispatch>()
-	const { currentUser } = useSelector((state: RootState) => state.auth)
-	const { awsClient, firebaseAuth } = useAppContext()
 	const { setAppState } = appSlice.actions
+	const { fileState } = useSelector((state: RootState) => state.app)
+	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const { setUser } = authSlice.actions
-	const { setBooks, clearBooks } = bookSlice.actions
+	const { setBooks, clearBooks, setFavorites, clearFavorites } = bookSlice.actions
+	const { books } = useSelector((state: RootState) => state.book)
+	const { awsClient, firebaseAuth, mongoClient } = useAppContext()
 
 	const verifyAndSetUserState = useCallback(async () => {
 		try {
@@ -43,7 +45,6 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 		try {
 			const books: Book[] | null = await awsClient.getBooks()
-
 			dispatch(setBooks(books))
 		} catch (e) {
 			console.error('Error fetching books in AppStateManager:', e)
@@ -64,6 +65,30 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 		initializeAppState()
 	}, [currentUser])
+
+	const fetchFavorites = useCallback(async () => {
+		try {
+			const favoriteBooks: FavoriteBook[] | null = await mongoClient.getBooks()
+
+			if (favoriteBooks && books) {
+				const favoriteBookIds = favoriteBooks.map(favorite => favorite.key)
+				const bookList: Book[] | null = books.filter(book =>
+					favoriteBookIds.includes(book.id)
+				)
+
+				dispatch(setFavorites(bookList))
+			}
+		} catch (error) {
+			console.log('Unable to fetch favorites:', error)
+			dispatch(clearFavorites())
+		}
+	}, [dispatch, books])
+
+	useEffect(() => {
+		if (books || fileState === 'added to favorites') {
+			fetchFavorites()
+		}
+	}, [books, fileState])
 
 	return <>{children}</>
 }

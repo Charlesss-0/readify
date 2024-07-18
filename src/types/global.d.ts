@@ -22,6 +22,11 @@ declare global {
 		logOut: () => Promise<void>
 		getCurrentUser: (router: AppRouterInstance) => Promise<User | null>
 	}
+
+	interface MongoClientInstance {
+		getBooks: () => Promise<FavoriteBook[] | null>
+		addToFavorites: (books: Book[] | null) => Promise<void>
+	}
 }
 
 // Describes the structure of a book in the application
