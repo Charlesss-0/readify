@@ -32,6 +32,7 @@ const Collection = styled.div`
 `
 
 const BookItem = styled.div`
+	width: min-content;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
