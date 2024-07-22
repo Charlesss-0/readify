@@ -10,7 +10,7 @@ export default function Library() {
 
 	return (
 		<>
-			<main className="overflow-auto bg-base-100">
+			<main>
 				<BookCollection books={books} />
 			</main>
 

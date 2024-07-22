@@ -1,8 +1,11 @@
 import {
+	CompleteMultipartUploadCommand,
+	CreateMultipartUploadCommand,
 	DeleteObjectCommand,
 	GetObjectCommand,
 	ListObjectsCommand,
 	PutObjectCommand,
+	UploadPartCommand,
 } from '@aws-sdk/client-s3'
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -84,13 +87,53 @@ export async function POST(req: Request) {
 			.substring(2, 15)}.epub`
 		const Key = `${userUid}/${uniqueFileName}`
 
-		const uploadParams = {
+		const createUploadCommand = {
 			Bucket,
 			Key,
-			Body,
 		}
 
-		const data = await s3.send(new PutObjectCommand(uploadParams))
+		const createMultipartUploadCommand = new CreateMultipartUploadCommand(
+			createUploadCommand
+		)
+		const multipartUploadData = await s3.send(createMultipartUploadCommand)
+
+		const partSize = 5 * 1024 * 1024
+		const partCount = Math.ceil(Body.length / partSize)
+		const uploadPromises = []
+
+		for (let partNumber = 0; partNumber < partCount; partNumber++) {
+			const start = partNumber * partSize
+			const end = Math.min(start + partSize, Body.length)
+
+			const partParams = {
+				Bucket,
+				Key,
+				PartNumber: partNumber + 1,
+				UploadId: multipartUploadData.UploadId,
+				Body: Body.slice(start, end),
+			}
+
+			const uploadPartCommand = new UploadPartCommand(partParams)
+			uploadPromises.push(s3.send(uploadPartCommand))
+		}
+
+		const uploadedParts = await Promise.all(uploadPromises)
+		const completeUploadParams = {
+			Bucket,
+			Key,
+			UploadId: multipartUploadData.UploadId,
+			MultipartUpload: {
+				Parts: uploadedParts.map((part, index) => ({
+					ETag: part.ETag,
+					PartNumber: index + 1,
+				})),
+			},
+		}
+
+		const completeMultipartUploadCommand = new CompleteMultipartUploadCommand(
+			completeUploadParams
+		)
+		const data = await s3.send(completeMultipartUploadCommand)
 
 		return Response.json(
 			{ message: 'File uploaded successfully', data },
