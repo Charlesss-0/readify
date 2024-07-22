@@ -186,7 +186,7 @@ export default function Sidebar() {
 		<Aside $isOpen={isSidebarOpen}>
 			<button
 				onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-				className="absolute p-5 transition-all duration-200 hover:opacity-90 active:scale-95 z-10"
+				className="absolute p-5 transition-all duration-200 hover:opacity-90 active:scale-95 z-10 outline-none"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

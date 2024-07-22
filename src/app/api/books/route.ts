@@ -38,7 +38,7 @@ export async function GET(req: Request) {
 				})
 
 				const signedUrl = await getSignedUrl(s3, command, {
-					expiresIn: 3600,
+					expiresIn: 3600 * 24,
 				})
 
 				return {

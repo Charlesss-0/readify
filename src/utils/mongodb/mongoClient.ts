@@ -8,11 +8,12 @@ declare global {
 
 export default class MongoClient {
 	constructor() {
-		this.getBooks = this.getBooks.bind(this)
+		this.getFavorites = this.getFavorites.bind(this)
 		this.addToFavorites = this.addToFavorites.bind(this)
+		this.removeFavorite = this.removeFavorite.bind(this)
 	}
 
-	public getBooks(): Promise<FavoriteBook[] | null> {
+	public getFavorites(): Promise<FavoriteBook[] | null> {
 		return new Promise(async (resolve, reject) => {
 			const userUid = localStorage.getItem('userUid')
 
@@ -46,13 +47,8 @@ export default class MongoClient {
 	public async addToFavorites(books: Book[] | null): Promise<void> {
 		const userUid = localStorage.getItem('userUid')
 
-		if (!userUid) {
-			console.log('User UID is not defined')
-			return
-		}
-
-		if (!books) {
-			console.log('No books array provided')
+		if (!userUid || !books) {
+			console.log('User UID or books array is not defined')
 			return
 		}
 
@@ -66,7 +62,9 @@ export default class MongoClient {
 		try {
 			const response = await fetch('/api/favorites', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+				},
 				body: JSON.stringify(document),
 			})
 			if (!response.ok) {
@@ -75,6 +73,31 @@ export default class MongoClient {
 			}
 		} catch (error: any) {
 			console.log('Unable to add to favorites:', error)
+		}
+	}
+
+	public async removeFavorite(bookId: string): Promise<void> {
+		const userUid = localStorage.getItem('userUid')
+
+		if (!userUid || !bookId) {
+			console.log('User UID or book key is not defined')
+			return
+		}
+
+		try {
+			const response = await fetch(`/api/favorites?userUid=${userUid}&bookId=${bookId}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			if (!response.ok) {
+				const errorData = await response.json()
+				console.error('Failed to delete file:', errorData)
+				return
+			}
+		} catch (error) {
+			console.error('Unable to remove from favorites:', error)
 		}
 	}
 }

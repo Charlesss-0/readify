@@ -68,7 +68,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 	const fetchFavorites = useCallback(async () => {
 		try {
-			const favoriteBooks: FavoriteBook[] | null = await mongoClient.getBooks()
+			const favoriteBooks: FavoriteBook[] | null = await mongoClient.getFavorites()
 
 			if (favoriteBooks && books) {
 				const favoriteBookIds = favoriteBooks.map(favorite => favorite.key)

@@ -24,8 +24,9 @@ declare global {
 	}
 
 	interface MongoClientInstance {
-		getBooks: () => Promise<FavoriteBook[] | null>
+		getFavorites: () => Promise<FavoriteBook[] | null>
 		addToFavorites: (books: Book[] | null) => Promise<void>
+		removeFavorite: (bookId: string) => Promise<void>
 	}
 }
 

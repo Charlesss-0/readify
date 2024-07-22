@@ -32,7 +32,6 @@ const Collection = styled.div`
 `
 
 const BookItem = styled.div`
-	width: min-content;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -66,9 +65,14 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 			icon: <GrFavorite />,
 			action: async () => {
 				try {
-					const bookObj: Book[] | null = books
-						? books.filter(book => bookId === book.id.replace(/^[^/]+\//, ''))
-						: null
+					if (!books || !bookId) {
+						console.error('Undefined books array or book id')
+						return
+					}
+
+					const bookObj: Book[] | null = books.filter(
+						book => bookId.replace(/^[^/]+\//, '') === book.id.replace(/^[^/]+\//, '')
+					)
 
 					if (bookObj) {
 						await mongoClient.addToFavorites(bookObj)
@@ -84,9 +88,14 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 			icon: <HiDownload />,
 			action: async () => {
 				try {
-					const bookObj: Book[] | null = books
-						? books.filter(book => bookId === book.id.replace(/^[^/]+\//, ''))
-						: null
+					if (!books || !bookId) {
+						console.error('Undefined books array or book id')
+						return
+					}
+
+					const bookObj: Book[] | null = books.filter(
+						book => bookId.replace(/^[^/]+\//, '') === book.id.replace(/^[^/]+\//, '')
+					)
 
 					if (bookObj) {
 						const url = bookObj[0].url
@@ -106,17 +115,24 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 			icon: <LuTrash />,
 			action: async () => {
 				try {
-					await awsClient.removeObject(bookId)
+					if (!books || !bookId) {
+						console.error('Undefined books array or book id')
+						return
+					}
+
+					await awsClient.removeObject(bookId.replace(/^[^/]+\//, ''))
 
 					dispatch(setFileState('deleted'))
 
-					const newBookList: Book[] | null = books
-						? books.filter(book => book.id.replace(/^[^/]+\//, '') !== bookId)
-						: null
+					const newBookList: Book[] | null = books.filter(
+						book => book.id.replace(/^[^/]+\//, '') !== bookId.replace(/^[^/]+\//, '')
+					)
 
 					if (newBookList) {
 						dispatch(setBooks(newBookList))
 					}
+
+					await mongoClient.removeFavorite(bookId)
 				} catch (e) {
 					console.error('Error deleting book', e)
 				}
@@ -153,7 +169,7 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 										role="button"
 										tabIndex={0}
 										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content"
-										onClick={() => setBookId(book.id.replace(/^[^/]+\//, ''))}
+										onClick={() => setBookId(book.id)}
 									>
 										<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
 									</div>
