@@ -1,17 +1,57 @@
 'use client'
 
-import { FaFacebook, FaGoogle } from 'react-icons/fa'
 import { RootState, authSlice } from '@/src/lib'
+import { devices, theme } from '@/src/constants'
 import { useDispatch, useSelector } from 'react-redux'
 
 import BookShelves from '@/src/assets/images/login/bookshelves'
+import { FcGoogle } from 'react-icons/fc'
 import { User } from 'firebase/auth'
 import { setCurrentUserState } from '@/src/utils'
 import styled from 'styled-components'
-import { theme } from '@/src/constants'
 import { useAppContext } from '@/src/context'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+
+const Container = styled.div`
+	background-color: ${theme['base-100']};
+	display: flex;
+	align-items: center;
+	height: 100vh;
+
+	@media only screen and ${devices.md} {
+		flex-direction: column;
+
+		& .bookshelves {
+			display: none;
+		}
+	}
+`
+
+const SignUpContainer = styled.div`
+	width: 50%;
+	height: 100vh;
+	background-color: ${theme['base-200']};
+	color: ${theme['base-100']};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 5rem;
+	border-radius: 1rem 0 0 1rem;
+
+	@media only screen and ${devices.md} {
+		width: 100%;
+		border-radius: 0;
+		padding: 1rem;
+	}
+`
+
+const SignUpForm = styled.form`
+	display: flex;
+	flex-direction: column;
+	gap: 3rem;
+	padding: 0.5rem;
+`
 
 const Field = styled.fieldset`
 	position: relative;
@@ -85,16 +125,6 @@ export default function SignUpPage() {
 		},
 	]
 
-	const signUpIcons = [
-		{
-			icon: <FaGoogle />,
-			event: handleGoogleSignIn,
-		},
-		{
-			icon: <FaFacebook />,
-		},
-	]
-
 	useEffect(() => {
 		const checkCurrentUser = async () => {
 			await firebaseAuth.getCurrentUser(router)
@@ -103,19 +133,15 @@ export default function SignUpPage() {
 	}, [currentUser])
 
 	return (
-		<div className="bg-base-100 flex items-center h-screen">
-			<div className="flex items-end w-[50%] h-screen p-3">
+		<Container>
+			<div className="bookshelves flex items-end w-[50%] h-screen p-3">
 				<BookShelves />
 			</div>
 
-			<div className="w-[50%] h-screen bg-base-200 flex flex-col justify-center p-20 rounded-tl-[2rem] rounded-bl-[2rem] text-base-100">
+			<SignUpContainer>
 				<h1 className="text-[2rem] text-neutral text-center mb-12">Create account</h1>
 
-				<form
-					action="#"
-					onSubmit={e => e.preventDefault()}
-					className="p-2 flex flex-col gap-12"
-				>
+				<SignUpForm action="#" onSubmit={e => e.preventDefault()}>
 					{fieldItems.map((item, index) => (
 						<Field key={index}>
 							<input
@@ -131,7 +157,7 @@ export default function SignUpPage() {
 					<button className="btn btn-secondary text-base-100 font-bold text-[1.1rem] transition-all duration-100 active:scale-[0.98]">
 						Sign Up
 					</button>
-				</form>
+				</SignUpForm>
 
 				<div className="flex items-center gap-2 py-10 [&>div]:border [&>div]:border-neutral-content [&>div]:flex-1 [&>div]:h-0 [&>div]:rounded-md">
 					<div></div>
@@ -140,17 +166,15 @@ export default function SignUpPage() {
 				</div>
 
 				<div className="flex justify-center gap-5">
-					{signUpIcons.map((item, index) => (
-						<button
-							key={index}
-							onClick={item.event}
-							className="p-3 rounded-full transition-all duration-100 bg-neutral-content hover:bg-base-200 hover:outline hover:outline-1 hover:outline-neutral-content active:scale-95 [&>*]:w-8 [&>*]:h-8"
-						>
-							{item.icon}
-						</button>
-					))}
+					<button
+						onClick={async () => await handleGoogleSignIn()}
+						className="btn bg-secondary-content text-neutral rounded-full px-8 transition-all duration-100 hover:bg-base-200 hover:outline hover:outline-1 hover:outline-neutral-content active:scale-95 [&>*]:w-8 [&>*]:h-8"
+					>
+						<FcGoogle />
+						Google
+					</button>
 				</div>
-			</div>
-		</div>
+			</SignUpContainer>
+		</Container>
 	)
 }
