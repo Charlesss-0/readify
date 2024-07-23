@@ -23,7 +23,7 @@ export default function UploadBtn(): React.ReactElement {
 		try {
 			if (e.target.files) {
 				await awsClient.uploadFile(e)
-				dispatch(setFileState('uploaded'))
+				dispatch(setFileState('Book successfully uploaded'))
 				await reFetchBooks()
 			}
 		} catch (error) {

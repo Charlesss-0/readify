@@ -77,8 +77,8 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	useEffect(() => {
 		if (
 			books ||
-			fileState === 'added to favorites' ||
-			fileState === 'book removed from favorites'
+			fileState === 'Book added to favorites' ||
+			fileState === 'Book removed from favorites'
 		) {
 			fetchFavorites()
 		}

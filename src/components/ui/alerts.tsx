@@ -21,11 +21,9 @@ export default function Alerts() {
 	const { setFileState } = appSlice.actions
 	const { fileState } = useSelector((state: RootState) => state.app)
 	const [showAlert, setShowAlert] = useState<boolean>(false)
-	const [currentFileState, setCurrentFileState] = useState<string | null>(null)
 
 	const setAlertState = useCallback(() => {
 		if (fileState) {
-			setCurrentFileState(fileState)
 			setShowAlert(true)
 
 			const timer = setTimeout(() => {
@@ -33,7 +31,6 @@ export default function Alerts() {
 
 				const hideTimer = setTimeout(() => {
 					dispatch(setFileState(null))
-					setCurrentFileState(null)
 				}, 500)
 
 				return () => clearTimeout(hideTimer)
@@ -63,7 +60,7 @@ export default function Alerts() {
 						d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 					/>
 				</svg>
-				<span>File {currentFileState} successfully!</span>
+				<span>{fileState}!</span>
 			</Alert>
 		</>
 	)

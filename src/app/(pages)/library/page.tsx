@@ -34,7 +34,7 @@ export default function LibraryPage() {
 
 					if (bookObj) {
 						await mongoClient.addToFavorites(bookObj)
-						dispatch(setFileState('added to favorites'))
+						dispatch(setFileState('Book added to favorites'))
 					}
 				} catch (error) {
 					console.log('Unable to add book to favorites', error)
@@ -62,7 +62,7 @@ export default function LibraryPage() {
 						await awsClient.downloadFile(title, url)
 					}
 
-					dispatch(setFileState('downloaded'))
+					dispatch(setFileState('Book successfully downloaded'))
 				} catch (error) {
 					console.log('Unable to download file:', error)
 				}
@@ -80,7 +80,7 @@ export default function LibraryPage() {
 
 					await awsClient.removeObject(bookId.replace(/^[^/]+\//, ''))
 
-					dispatch(setFileState('deleted'))
+					dispatch(setFileState('Book successfully deleted'))
 
 					const newBookList: Book[] | null = books.filter(
 						book => book.id.replace(/^[^/]+\//, '') !== bookId.replace(/^[^/]+\//, '')

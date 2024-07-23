@@ -88,7 +88,7 @@ export default function BookCollection({ books, emptyMessage, bookActions }: Boo
 	const handleFavoriteRemoval = async (bookId: string) => {
 		try {
 			await mongoClient.removeFavorite(bookId)
-			dispatch(setFileState('book removed from favorites'))
+			dispatch(setFileState('Book removed from favorites'))
 		} catch (error) {
 			console.error('Error removing book from favorites', error)
 		}
