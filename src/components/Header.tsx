@@ -8,7 +8,7 @@ export default function Header() {
 		<header className="flex bg-base-100 fixed top-0 left-0 w-full z-10 shadow-md">
 			<div className="flex justify-end w-full p-[0.65rem] px-[1rem]">
 				<button>
-					<IoIosSearch className="w-10 h-10" fill={`${theme.neutral}`} />
+					<IoIosSearch className="w-8 h-8" fill={`${theme.neutral}`} />
 				</button>
 			</div>
 		</header>

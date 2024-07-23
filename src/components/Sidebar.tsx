@@ -124,6 +124,7 @@ export default function Sidebar() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
 	const [formattedName, setFormattedName] = useState<string>('')
+	const [imgError, setImgError] = useState<boolean>(false)
 
 	useEffect(() => {
 		const formatName = () => {
@@ -191,7 +192,7 @@ export default function Sidebar() {
 		<Aside $isOpen={isSidebarOpen}>
 			<button
 				onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-				className="absolute p-4 transition-all duration-200 hover:opacity-90 active:scale-95 z-10 outline-none"
+				className="absolute p-3 transition-all duration-200 hover:opacity-90 active:scale-95 z-10 outline-none"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -212,24 +213,22 @@ export default function Sidebar() {
 			<SideDrawer $isOpen={isSidebarOpen}>
 				<details className="dropdown pt-12 text-primary">
 					<UserBtn onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-						{currentUser ? (
+						{currentUser && (
 							<>
-								<Avatar>
-									<img
-										src={currentUser.photoURL}
-										alt={currentUser.displayName}
-										draggable={false}
-										loading="lazy"
-									/>
-								</Avatar>
-
+								{imgError ? (
+									<LuUserCircle className="w-6 h-6" />
+								) : (
+									<Avatar>
+										<img
+											src={currentUser.photoURL}
+											alt={currentUser.displayName}
+											draggable={false}
+											loading="lazy"
+											onError={() => setImgError(true)}
+										/>
+									</Avatar>
+								)}
 								<p className="font-bold">{formattedName}</p>
-							</>
-						) : (
-							<>
-								<LuUserCircle />
-
-								<p className="font-bold">No user</p>
 							</>
 						)}
 

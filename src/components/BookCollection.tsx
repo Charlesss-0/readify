@@ -6,7 +6,6 @@ import { devices, theme } from '../constants'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { CiHeart } from 'react-icons/ci'
 import Empty from '@/src/assets/images/home/empty'
-import { GoHeart } from 'react-icons/go'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useAppContext } from '../context'
@@ -26,16 +25,17 @@ interface BookCollectionProps {
 
 const Collection = styled.div`
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(200px, 250px));
+	justify-content: space-around;
 	align-items: start;
-	gap: 2rem;
 	width: 100%;
 	height: 100vh;
 	padding: 1rem;
 	padding-top: 5rem;
 
 	@media only screen and ${devices.md} {
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(150px, 150px));
+		justify-content: space-around;
 		gap: 1rem;
 		font-size: 0.9rem;
 	}
@@ -46,7 +46,6 @@ const BookItem = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin-bottom: 2rem;
 `
 
 const Cover = styled.div`
@@ -60,11 +59,16 @@ const Cover = styled.div`
 		height: 100%;
 		object-fit: cover;
 	}
+
+	@media only screen and ${devices.md} {
+		border-radius: 0.5rem;
+	}
 `
 
 const IconWrapper = styled.div`
 	cursor: pointer;
 	border-radius: 50%;
+	padding: 3px;
 
 	&:hover > svg {
 		fill: red;
@@ -106,7 +110,7 @@ export default function BookCollection({ books, emptyMessage, bookActions }: Boo
 							</Link>
 
 							<div className="w-full flex items-center pt-3">
-								<h1 className="w-full text-center text-neutral font-bold whitespace-nowrap text-ellipsis overflow-hidden">
+								<h1 className="w-full text-center px-1 text-neutral font-bold whitespace-nowrap text-ellipsis overflow-hidden">
 									{book.title}
 								</h1>
 
@@ -140,7 +144,7 @@ export default function BookCollection({ books, emptyMessage, bookActions }: Boo
 								) : (
 									<>
 										<IconWrapper onClick={async () => await handleFavoriteRemoval(book.id)}>
-											<CiHeart className="w-16 h-16 p-2" />
+											<CiHeart className="w-8 h-8" />
 										</IconWrapper>
 									</>
 								)}

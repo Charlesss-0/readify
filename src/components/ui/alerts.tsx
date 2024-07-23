@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 const Alert = styled.div<{ $show: boolean }>`
-	position: absolute;
+	position: fixed;
 	bottom: 0.5rem;
 	left: 50%;
 	transform: translateX(-50%);
