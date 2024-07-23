@@ -2,7 +2,7 @@
 
 import { SignIn } from '@/src/components'
 
-export default function Login() {
+export default function LoginPage() {
 	const inputItems = [
 		{
 			type: 'email',

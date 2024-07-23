@@ -1,6 +1,6 @@
 'use client'
 
-import { Header, Sidebar } from '@/src/components'
+import { Alerts, Header, Sidebar } from '@/src/components'
 import styled, { keyframes } from 'styled-components'
 
 import React from 'react'
@@ -93,6 +93,8 @@ export default function LibraryLayout({ children }: { children: React.ReactNode 
 					</LoadingWrapper>
 				</>
 			)}
+
+			<Alerts />
 		</>
 	)
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import { Alerts, BookCollection } from '@/src/components'
-
+import { BookCollection } from '@/src/components'
 import { RootState } from '@/src/lib'
 import { useSelector } from 'react-redux'
 
@@ -13,8 +12,6 @@ export default function Library() {
 			<main>
 				<BookCollection books={books} />
 			</main>
-
-			<Alerts />
 		</>
 	)
 }

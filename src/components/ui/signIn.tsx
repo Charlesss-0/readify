@@ -9,7 +9,6 @@ import { User } from 'firebase/auth'
 import { setCurrentUserState } from '@/src/utils'
 import styled from 'styled-components'
 import { useAppContext } from '@/src/context'
-import { useEffect } from 'react'
 
 interface InputItems {
 	name: string

@@ -54,6 +54,7 @@ export default class FirebaseAuth {
 		}
 	}
 
+	// create a user when signing up for the first time
 	public async createUserWithEmailAndPassword(
 		displayName: string,
 		email: string,
@@ -72,6 +73,7 @@ export default class FirebaseAuth {
 		}
 	}
 
+	// sign in with already existing user email and password
 	public async signInWithEmailAndPassword(email: string, password: string): Promise<User | null> {
 		try {
 			await setPersistence(this.auth, browserLocalPersistence)

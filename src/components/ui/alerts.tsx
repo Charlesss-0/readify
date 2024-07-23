@@ -1,29 +1,8 @@
 import { AppDispatch, RootState, appSlice } from '@/src/lib'
-import styled, { keyframes } from 'styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const show = keyframes`
-    0% {
-        transform: translateX(-50%) translateY(200%);
-		display: none;
-    }
-    100% {
-        transform: translateX(-50%) translateY(0%);
-		display: flex;
-    }
-`
-
-const hide = keyframes`
-	0% {
-		transform: translateX(-50%) translateY(0%);
-		display: flex;
-	}
-	100% {
-		transform: translateX(-50%) translateY(200%);
-		display: none;
-	}
-`
+import styled from 'styled-components'
 
 const Alert = styled.div<{ $show: boolean }>`
 	position: absolute;
@@ -32,7 +11,9 @@ const Alert = styled.div<{ $show: boolean }>`
 	transform: translateX(-50%);
 	color: #ffffff;
 	width: max-content;
-	animation: ${props => (props.$show ? show : hide)} 500ms forwards;
+	display: ${props => (props.$show ? 'flex' : 'none')};
+	opacity: ${props => (props.$show ? '1' : '0')};
+	transition: opacity 500ms;
 `
 
 export default function Alerts() {
