@@ -1,18 +1,28 @@
 'use client'
 
-import { AppDispatch, RootState, appSlice, bookSlice } from '@/src/lib'
+import { AppDispatch, appSlice, bookSlice } from '@/src/lib'
 import { devices, theme } from '../constants'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { CiHeart } from 'react-icons/ci'
 import Empty from '@/src/assets/images/home/empty'
-import { GrFavorite } from 'react-icons/gr'
-import { HiDownload } from 'react-icons/hi'
+import { GoHeart } from 'react-icons/go'
 import Link from 'next/link'
-import { LuTrash } from 'react-icons/lu'
 import styled from 'styled-components'
 import { useAppContext } from '../context'
-import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+interface BookActions {
+	text: string
+	icon: JSX.Element
+	action: () => Promise<void>
+}
+
+interface BookCollectionProps {
+	books: Book[] | null
+	emptyMessage: string
+	bookActions?: BookActions[]
+}
 
 const Collection = styled.div`
 	display: grid;
@@ -52,96 +62,32 @@ const Cover = styled.div`
 	}
 `
 
-export default function BookCollection({ books }: { books: Book[] | null }) {
-	const { awsClient, mongoClient } = useAppContext()
+const IconWrapper = styled.div`
+	cursor: pointer;
+	border-radius: 50%;
+
+	&:hover > svg {
+		fill: red;
+	}
+`
+
+export default function BookCollection({ books, emptyMessage, bookActions }: BookCollectionProps) {
+	const { mongoClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
+	const { setBookId } = bookSlice.actions
 	const { setFileState } = appSlice.actions
-	const { setBooks } = bookSlice.actions
-	const [bookId, setBookId] = useState<string>('')
-
-	const bookOptions = [
-		{
-			text: 'Add to favorites',
-			icon: <GrFavorite />,
-			action: async () => {
-				try {
-					if (!books || !bookId) {
-						console.error('Undefined books array or book id')
-						return
-					}
-
-					const bookObj: Book[] | null = books.filter(
-						book => bookId.replace(/^[^/]+\//, '') === book.id.replace(/^[^/]+\//, '')
-					)
-
-					if (bookObj) {
-						await mongoClient.addToFavorites(bookObj)
-						dispatch(setFileState('added to favorites'))
-					}
-				} catch (error) {
-					console.log('Unable to add book to favorites', error)
-				}
-			},
-		},
-		{
-			text: 'Download',
-			icon: <HiDownload />,
-			action: async () => {
-				try {
-					if (!books || !bookId) {
-						console.error('Undefined books array or book id')
-						return
-					}
-
-					const bookObj: Book[] | null = books.filter(
-						book => bookId.replace(/^[^/]+\//, '') === book.id.replace(/^[^/]+\//, '')
-					)
-
-					if (bookObj) {
-						const url = bookObj[0].url
-						const title = bookObj[0].title
-
-						await awsClient.downloadFile(title, url)
-					}
-
-					dispatch(setFileState('downloaded'))
-				} catch (error) {
-					console.log('Unable to download file:', error)
-				}
-			},
-		},
-		{
-			text: 'Delete',
-			icon: <LuTrash />,
-			action: async () => {
-				try {
-					if (!books || !bookId) {
-						console.error('Undefined books array or book id')
-						return
-					}
-
-					await awsClient.removeObject(bookId.replace(/^[^/]+\//, ''))
-
-					dispatch(setFileState('deleted'))
-
-					const newBookList: Book[] | null = books.filter(
-						book => book.id.replace(/^[^/]+\//, '') !== bookId.replace(/^[^/]+\//, '')
-					)
-
-					if (newBookList) {
-						dispatch(setBooks(newBookList))
-					}
-
-					await mongoClient.removeFavorite(bookId)
-				} catch (e) {
-					console.error('Error deleting book', e)
-				}
-			},
-		},
-	]
 
 	const handleBookSelection = (url: string) => {
 		localStorage.setItem('bookUrl', url)
+	}
+
+	const handleFavoriteRemoval = async (bookId: string) => {
+		try {
+			await mongoClient.removeFavorite(bookId)
+			dispatch(setFileState('book removed from favorites'))
+		} catch (error) {
+			console.error('Error removing book from favorites', error)
+		}
 	}
 
 	return (
@@ -164,39 +110,47 @@ export default function BookCollection({ books }: { books: Book[] | null }) {
 									{book.title}
 								</h1>
 
-								<div className="dropdown dropdown-end">
-									<div
-										role="button"
-										tabIndex={0}
-										className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content"
-										onClick={() => setBookId(book.id)}
-									>
-										<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
-									</div>
+								{bookActions ? (
+									<div className="dropdown dropdown-end">
+										<div
+											role="button"
+											tabIndex={0}
+											className="p-2 rounded-full transition-all duration-200 hover:bg-secondary-content"
+											onClick={() => dispatch(setBookId(book.id))}
+										>
+											<BsThreeDotsVertical className="h-5 w-5 text-neutral" />
+										</div>
 
-									<ul
-										tabIndex={0}
-										className="dropdown-content w-max absolute mt-3 flex flex-col p-2 rounded-lg bg-base-200 select-none border border-neutral"
-									>
-										{bookOptions.map((item: any, index: number) => (
-											<li
-												key={index}
-												onClick={item.action}
-												className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-secondary-content text-primary active:scale-[0.98]"
-											>
-												{item.icon}
-												{item.text}
-											</li>
-										))}
-									</ul>
-								</div>
+										<ul
+											tabIndex={0}
+											className="dropdown-content w-max absolute mt-3 flex flex-col p-2 rounded-lg bg-base-200 select-none border border-neutral"
+										>
+											{bookActions.map((item: any, index: number) => (
+												<li
+													key={index}
+													onClick={item.action}
+													className="flex items-center gap-2 p-2 rounded-md transition-all duration-200 cursor-pointer hover:bg-secondary-content text-primary active:scale-[0.98]"
+												>
+													{item.icon}
+													{item.text}
+												</li>
+											))}
+										</ul>
+									</div>
+								) : (
+									<>
+										<IconWrapper onClick={async () => await handleFavoriteRemoval(book.id)}>
+											<CiHeart className="w-16 h-16 p-2" />
+										</IconWrapper>
+									</>
+								)}
 							</div>
 						</BookItem>
 					))}
 				</>
 			) : (
 				<div className="bg-base-100 w-full h-screen flex flex-col items-center justify-end absolute top-0 left-0">
-					<h1 className="text-neutral text-[1.5rem] p-12">Your library is empty</h1>
+					<h1 className="text-neutral text-[1.5rem] p-12">{emptyMessage}</h1>
 					<Empty className="w-[50%]" />
 				</div>
 			)}

@@ -4,12 +4,8 @@ import { BookCollection } from '@/src/components'
 import { RootState } from '@/src/lib'
 import { useSelector } from 'react-redux'
 
-export default function Favorites() {
+export default function FavoritesPage() {
 	const { favorites } = useSelector((state: RootState) => state.book)
 
-	return (
-		<div>
-			<BookCollection books={favorites} />
-		</div>
-	)
+	return <BookCollection books={favorites} emptyMessage={'Your favorites are empty'} />
 }

@@ -2,7 +2,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 interface AppState {
 	appState: 'loading' | 'ready'
-	fileState: 'uploaded' | 'deleted' | 'downloaded' | 'added to favorites' | null
+	fileState:
+		| 'uploaded'
+		| 'deleted'
+		| 'downloaded'
+		| 'added to favorites'
+		| 'book removed from favorites'
+		| null
 }
 
 const initialState: AppState = {

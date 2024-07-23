@@ -1,12 +1,6 @@
 'use client'
 
-import {
-	type AppDispatch,
-	type RootState,
-	appSlice,
-	authSlice,
-	bookSlice,
-} from '@/src/lib'
+import { type AppDispatch, type RootState, appSlice, authSlice, bookSlice } from '@/src/lib'
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -31,9 +25,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 			const user: User | null = await firebaseAuth.getCurrentUser(router)
 
 			if (user) {
-				setCurrentUserState(user, (user: AuthState) =>
-					dispatch(setUser(user.currentUser))
-				)
+				setCurrentUserState(user, (user: AuthState) => dispatch(setUser(user.currentUser)))
 			}
 		} catch (e) {
 			console.error('No user signed in', e)
@@ -72,9 +64,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 
 			if (favoriteBooks && books) {
 				const favoriteBookIds = favoriteBooks.map(favorite => favorite.key)
-				const bookList: Book[] | null = books.filter(book =>
-					favoriteBookIds.includes(book.id)
-				)
+				const bookList: Book[] | null = books.filter(book => favoriteBookIds.includes(book.id))
 
 				dispatch(setFavorites(bookList))
 			}
@@ -85,7 +75,11 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	}, [dispatch, books])
 
 	useEffect(() => {
-		if (books || fileState === 'added to favorites') {
+		if (
+			books ||
+			fileState === 'added to favorites' ||
+			fileState === 'book removed from favorites'
+		) {
 			fetchFavorites()
 		}
 	}, [books, fileState])
