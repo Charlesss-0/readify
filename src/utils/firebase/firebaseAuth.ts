@@ -5,6 +5,9 @@ import {
 	setPersistence,
 	signInWithPopup,
 	GoogleAuthProvider,
+	createUserWithEmailAndPassword,
+	updateProfile,
+	signInWithEmailAndPassword,
 } from 'firebase/auth'
 
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -48,6 +51,37 @@ export default class FirebaseAuth {
 			return this.currentUser
 		} catch (e: any) {
 			throw new Error(e)
+		}
+	}
+
+	public async createUserWithEmailAndPassword(
+		displayName: string,
+		email: string,
+		password: string
+	): Promise<User | null> {
+		try {
+			await setPersistence(this.auth, browserLocalPersistence)
+			const userCredential = await createUserWithEmailAndPassword(this.auth, email, password)
+
+			this.currentUser = userCredential.user
+			await updateProfile(this.currentUser, { displayName })
+
+			return this.currentUser
+		} catch (error: any) {
+			throw new Error('Unable to Sign Up:', error)
+		}
+	}
+
+	public async signInWithEmailAndPassword(email: string, password: string): Promise<User | null> {
+		try {
+			await setPersistence(this.auth, browserLocalPersistence)
+			const userCredential = await signInWithEmailAndPassword(this.auth, email, password)
+
+			this.currentUser = userCredential.user
+
+			return this.currentUser
+		} catch (error: any) {
+			throw new Error('Unable to sign in:', error)
 		}
 	}
 

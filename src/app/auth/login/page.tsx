@@ -2,13 +2,8 @@
 
 import { SignIn } from '@/src/components'
 
-export default function SignUpPage() {
+export default function Login() {
 	const inputItems = [
-		{
-			type: 'text',
-			text: 'Name',
-			name: 'user-name',
-		},
 		{
 			type: 'email',
 			text: 'Email',
@@ -21,5 +16,5 @@ export default function SignUpPage() {
 		},
 	]
 
-	return <SignIn signup={true} inputItems={inputItems} />
+	return <SignIn signin={true} inputItems={inputItems} />
 }

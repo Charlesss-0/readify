@@ -19,6 +19,12 @@ declare global {
 
 	interface FirebaseAuthInstance {
 		signInWithGoogle: () => Promise<User | null>
+		createUserWithEmailAndPassword: (
+			displayName: string,
+			email: string,
+			password: string
+		) => Promise<User | null>
+		signInWithEmailAndPassword: (email: string, password: string) => Promise<User | null>
 		logOut: () => Promise<void>
 		getCurrentUser: (router: AppRouterInstance) => Promise<User | null>
 	}
@@ -61,5 +67,8 @@ declare global {
 			email: string
 			photoURL: string
 		} | null
+		name?: string | null
+		email?: string | null
+		password?: string | null
 	}
 }
