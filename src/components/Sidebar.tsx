@@ -10,16 +10,16 @@ import {
 	TbLogout,
 } from '@/src/assets/icons/icons'
 import { ListItem, ListItemContainer, theme } from '@/src/constants'
+import { RootState, bookSlice } from '@/src/lib'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useMemo, useState } from 'react'
 
 import Link from 'next/link'
 import Profile from './Profile'
-import { RootState } from '@/src/lib'
 import UploadBtn from './ui/uploadBtn'
 import styled from 'styled-components'
 import { useAppContext } from '@/src/context'
 import { usePathname } from 'next/navigation'
-import { useSelector } from 'react-redux'
 
 const Avatar = styled.div`
 	width: 2rem;
@@ -116,8 +116,10 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `
 
 export default function Sidebar() {
+	const dispatch = useDispatch()
 	const pathName = usePathname()
 	const { firebaseAuth } = useAppContext()
+	const { clearFavorites } = bookSlice.actions
 	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
@@ -152,7 +154,10 @@ export default function Sidebar() {
 			{
 				text: 'Log out',
 				icon: <TbLogout />,
-				action: async () => await firebaseAuth.logOut(),
+				action: async () => {
+					dispatch(clearFavorites())
+					await firebaseAuth.logOut()
+				},
 			},
 		],
 		[]
