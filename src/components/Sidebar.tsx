@@ -119,7 +119,7 @@ export default function Sidebar() {
 	const dispatch = useDispatch()
 	const pathName = usePathname()
 	const { firebaseAuth } = useAppContext()
-	const { clearFavorites } = bookSlice.actions
+	const { clearFavorites, clearBooks } = bookSlice.actions
 	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false)
@@ -156,6 +156,7 @@ export default function Sidebar() {
 				text: 'Log out',
 				icon: <TbLogout />,
 				action: async () => {
+					dispatch(clearBooks())
 					dispatch(clearFavorites())
 					await firebaseAuth.logOut()
 				},
