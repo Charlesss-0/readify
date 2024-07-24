@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Disallow: /api/
+
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://readify-one.vercel.app
+
+# Sitemaps
+Sitemap: https://readify-one.vercel.app/sitemap.xml

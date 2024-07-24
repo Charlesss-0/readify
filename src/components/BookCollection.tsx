@@ -46,6 +46,11 @@ const BookItem = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	margin-bottom: 2rem;
+
+	@media only screen and ${devices.md} {
+		margin: 0;
+	}
 `
 
 const Cover = styled.div`
