@@ -79,7 +79,7 @@ export default function BookCollection({ books, emptyMessage, bookActions }: Boo
 	const { mongoClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
 	const { setBookId } = bookSlice.actions
-	const { setFileState } = appSlice.actions
+	const { setAlert } = appSlice.actions
 
 	const handleBookSelection = (url: string) => {
 		localStorage.setItem('bookUrl', url)
@@ -88,9 +88,10 @@ export default function BookCollection({ books, emptyMessage, bookActions }: Boo
 	const handleFavoriteRemoval = async (bookId: string) => {
 		try {
 			await mongoClient.removeFavorite(bookId)
-			dispatch(setFileState('Book removed from favorites'))
+			dispatch(setAlert({ type: 'success', message: 'Book removed from favorites' }))
 		} catch (error) {
 			console.error('Error removing book from favorites', error)
+			dispatch(setAlert({ type: 'error', message: 'Unable to remove book from favorites' }))
 		}
 	}
 

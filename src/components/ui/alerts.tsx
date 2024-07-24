@@ -18,35 +18,45 @@ const Alert = styled.div<{ $show: boolean }>`
 
 export default function Alerts() {
 	const dispatch = useDispatch<AppDispatch>()
-	const { setFileState } = appSlice.actions
-	const { fileState } = useSelector((state: RootState) => state.app)
+	const { clearAlert } = appSlice.actions
+	const { alert } = useSelector((state: RootState) => state.app)
 	const [showAlert, setShowAlert] = useState<boolean>(false)
 
 	const setAlertState = useCallback(() => {
-		if (fileState) {
+		if (alert.type && alert.message) {
 			setShowAlert(true)
 
 			const timer = setTimeout(() => {
 				setShowAlert(false)
-
 				const hideTimer = setTimeout(() => {
-					dispatch(setFileState(null))
+					dispatch(clearAlert())
 				}, 500)
-
 				return () => clearTimeout(hideTimer)
 			}, 4000)
 
 			return () => clearTimeout(timer)
 		}
-	}, [fileState])
+	}, [alert])
 
 	useEffect(() => {
 		setAlertState()
-	}, [fileState])
+	}, [alert])
 
 	return (
 		<>
-			<Alert role="alert" className="alert alert-success" $show={showAlert}>
+			<Alert
+				role="alert"
+				className={`alert ${
+					alert.type === 'info'
+						? 'alert-info'
+						: alert.type === 'success'
+						? 'alert-success'
+						: alert.type === 'error'
+						? 'alert-error'
+						: ''
+				}`}
+				$show={showAlert}
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					className="h-6 w-6 shrink-0 stroke-current"
@@ -60,7 +70,7 @@ export default function Alerts() {
 						d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 					/>
 				</svg>
-				<span>{fileState}!</span>
+				<span>{alert.message}</span>
 			</Alert>
 		</>
 	)

@@ -13,7 +13,7 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	const router = useRouter()
 	const dispatch = useDispatch<AppDispatch>()
 	const { setAppState } = appSlice.actions
-	const { fileState } = useSelector((state: RootState) => state.app)
+	const { alert } = useSelector((state: RootState) => state.app)
 	const { currentUser } = useSelector((state: RootState) => state.auth)
 	const { setUser } = authSlice.actions
 	const { setBooks, clearBooks, setFavorites, clearFavorites } = bookSlice.actions
@@ -33,8 +33,6 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	}, [dispatch])
 
 	const fetchBooks = useCallback(async () => {
-		dispatch(setAppState('loading'))
-
 		try {
 			const books: Book[] | null = await awsClient.getBooks()
 			dispatch(setBooks(books))
@@ -77,12 +75,12 @@ export default function AppStateManager({ children }: { children: React.ReactNod
 	useEffect(() => {
 		if (
 			books ||
-			fileState === 'Book added to favorites' ||
-			fileState === 'Book removed from favorites'
+			(alert.type === 'success' && alert.message === 'Book added to favorites') ||
+			(alert.type === 'success' && alert.message === 'Book removed from favorites')
 		) {
 			fetchFavorites()
 		}
-	}, [books, fileState])
+	}, [books, alert])
 
 	return <>{children}</>
 }

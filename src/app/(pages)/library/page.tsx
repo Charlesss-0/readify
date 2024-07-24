@@ -13,7 +13,7 @@ export default function LibraryPage() {
 	const { books } = useSelector((state: RootState) => state.book)
 	const { mongoClient, awsClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
-	const { setFileState } = appSlice.actions
+	const { setAlert } = appSlice.actions
 	const { setBooks } = bookSlice.actions
 	const { bookId } = useSelector((state: RootState) => state.book)
 
@@ -34,10 +34,11 @@ export default function LibraryPage() {
 
 					if (bookObj) {
 						await mongoClient.addToFavorites(bookObj)
-						dispatch(setFileState('Book added to favorites'))
+						dispatch(setAlert({ type: 'success', message: 'Book added to favorites' }))
 					}
 				} catch (error) {
 					console.log('Unable to add book to favorites', error)
+					dispatch(setAlert({ type: 'error', message: 'Unable to add book to favorites' }))
 				}
 			},
 		},
@@ -45,6 +46,8 @@ export default function LibraryPage() {
 			text: 'Download',
 			icon: <HiDownload />,
 			action: async () => {
+				dispatch(setAlert({ type: 'info', message: 'Downloading book' }))
+
 				try {
 					if (!books || !bookId) {
 						console.error('Undefined books array or book id')
@@ -62,9 +65,10 @@ export default function LibraryPage() {
 						await awsClient.downloadFile(title, url)
 					}
 
-					dispatch(setFileState('Book successfully downloaded'))
+					dispatch(setAlert({ type: 'success', message: 'Book downloaded successfully' }))
 				} catch (error) {
 					console.log('Unable to download file:', error)
+					dispatch(setAlert({ type: 'error', message: 'Unable to download book' }))
 				}
 			},
 		},
@@ -72,6 +76,8 @@ export default function LibraryPage() {
 			text: 'Delete',
 			icon: <LuTrash />,
 			action: async () => {
+				dispatch(setAlert({ type: 'info', message: 'Deleting book' }))
+
 				try {
 					if (!books || !bookId) {
 						console.error('Undefined books array or book id')
@@ -79,8 +85,6 @@ export default function LibraryPage() {
 					}
 
 					await awsClient.removeObject(bookId.replace(/^[^/]+\//, ''))
-
-					dispatch(setFileState('Book successfully deleted'))
 
 					const newBookList: Book[] | null = books.filter(
 						book => book.id.replace(/^[^/]+\//, '') !== bookId.replace(/^[^/]+\//, '')
@@ -91,8 +95,11 @@ export default function LibraryPage() {
 					}
 
 					await mongoClient.removeFavorite(bookId)
+
+					dispatch(setAlert({ type: 'success', message: 'Book deleted successfully' }))
 				} catch (e) {
 					console.error('Error deleting book', e)
+					dispatch(setAlert({ type: 'error', message: 'Unable to delete book' }))
 				}
 			},
 		},

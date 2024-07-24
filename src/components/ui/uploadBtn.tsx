@@ -11,7 +11,7 @@ export default function UploadBtn(): React.ReactElement {
 	const { awsClient } = useAppContext()
 	const dispatch = useDispatch<AppDispatch>()
 	const { setBooks } = bookSlice.actions
-	const { setFileState } = appSlice.actions
+	const { setAlert } = appSlice.actions
 
 	const reFetchBooks = async () => {
 		const newBooks: Book[] | null = await awsClient.getBooks()
@@ -20,14 +20,18 @@ export default function UploadBtn(): React.ReactElement {
 	}
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		dispatch(setAlert({ type: 'info', message: 'Uploading book' }))
+
 		try {
 			if (e.target.files) {
 				await awsClient.uploadFile(e)
-				dispatch(setFileState('Book successfully uploaded'))
 				await reFetchBooks()
 			}
+
+			dispatch(setAlert({ type: 'success', message: 'Book uploaded successfully' }))
 		} catch (error) {
 			console.error('Failed to upload file', error)
+			dispatch(setAlert({ type: 'error', message: 'Unable to upload book' }))
 		}
 	}
 
