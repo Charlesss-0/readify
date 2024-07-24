@@ -4,7 +4,6 @@ import { AppStateManager, StyledComponentsRegistry } from '@/src/hoc'
 
 import { AppContextProvider } from '@/src/context/appContext'
 import { GoogleTagManager } from '@next/third-parties/google'
-import Head from 'next/head'
 import { Metadata } from 'next'
 import StoreProvider from './storeProvider'
 
@@ -14,8 +13,8 @@ export const metadata: Metadata = {
 	manifest: '/manifest.json',
 	keywords: ['nextjs', 'nextjs13', 'next13', 'pwa', 'next-pwa'],
 	icons: [
-		{ rel: 'apple-touch-icon', url: '/icon-192x192.png' },
-		{ rel: 'icon', url: '/icon-192x192.png' },
+		{ rel: 'apple-touch-icon', url: '/icons/icon-192x192.png' },
+		{ rel: 'icon', url: '/icons/icon-192x192.png' },
 	],
 }
 
@@ -26,10 +25,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<AppStateManager>
 					<StyledComponentsRegistry>
 						<html lang="en" data-theme="appTheme">
-							<Head>
-								<GoogleTagManager gtmId="GTM-TNRLXM32" />
-							</Head>
 							<body>
+								<main>{children}</main>
+
+								{/* <!-- Google Tag Manager --> */}
+								<GoogleTagManager gtmId="GTM-TNRLXM32" />
+								{/* <!-- End Google Tag Manager --> */}
+
 								{/* <!-- Google Tag Manager (noscript) --> */}
 								<noscript>
 									<iframe
@@ -40,8 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 									></iframe>
 								</noscript>
 								{/* <!-- End Google Tag Manager (noscript) --> */}
-
-								{children}
 							</body>
 						</html>
 					</StyledComponentsRegistry>

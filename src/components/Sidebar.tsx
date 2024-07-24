@@ -156,9 +156,10 @@ export default function Sidebar() {
 				text: 'Log out',
 				icon: <TbLogout />,
 				action: async () => {
+					await firebaseAuth.logOut()
+
 					dispatch(clearBooks())
 					dispatch(clearFavorites())
-					await firebaseAuth.logOut()
 				},
 			},
 		],
