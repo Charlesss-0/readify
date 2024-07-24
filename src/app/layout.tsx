@@ -3,6 +3,8 @@ import './globals.css'
 import { AppStateManager, StyledComponentsRegistry } from '@/src/hoc'
 
 import { AppContextProvider } from '@/src/context/appContext'
+import { GoogleTagManager } from '@next/third-parties/google'
+import Head from 'next/head'
 import { Metadata } from 'next'
 import StoreProvider from './storeProvider'
 
@@ -24,7 +26,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<AppStateManager>
 					<StyledComponentsRegistry>
 						<html lang="en" data-theme="appTheme">
-							<body>{children}</body>
+							<Head>
+								<GoogleTagManager gtmId="GTM-TNRLXM32" />
+							</Head>
+							<body>
+								{/* <!-- Google Tag Manager (noscript) --> */}
+								<noscript>
+									<iframe
+										src="https://www.googletagmanager.com/ns.html?id=GTM-TNRLXM32"
+										height="0"
+										width="0"
+										style={{ display: 'none', visibility: 'hidden' }}
+									></iframe>
+								</noscript>
+								{/* <!-- End Google Tag Manager (noscript) --> */}
+
+								{children}
+							</body>
 						</html>
 					</StyledComponentsRegistry>
 				</AppStateManager>

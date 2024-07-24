@@ -216,7 +216,7 @@ export default function Sidebar() {
 					<UserBtn onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
 						{currentUser && (
 							<>
-								{imgError ? (
+								{imgError || !currentUser.photoURL ? (
 									<LuUserCircle className="w-6 h-6" />
 								) : (
 									<Avatar>
