@@ -27,10 +27,7 @@ export async function GET(req: Request) {
 
 		const userObjects = contents.filter((item: any) => item.Key.startsWith(`${userUid}/`))
 		if (!userObjects || userObjects.length === 0) {
-			return Response.json(
-				{ message: 'No matching user objects found!' },
-				{ status: 404 }
-			)
+			return Response.json({ message: 'No matching user objects found!' }, { status: 404 })
 		}
 
 		const signedUrls = await Promise.all(
@@ -82,9 +79,7 @@ export async function POST(req: Request) {
 		}
 
 		const Body = Buffer.from(await file.arrayBuffer())
-		const uniqueFileName = `${Date.now()}-${Math.random()
-			.toString(36)
-			.substring(2, 15)}.epub`
+		const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.epub`
 		const Key = `${userUid}/${uniqueFileName}`
 
 		const createUploadCommand = {
@@ -92,9 +87,7 @@ export async function POST(req: Request) {
 			Key,
 		}
 
-		const createMultipartUploadCommand = new CreateMultipartUploadCommand(
-			createUploadCommand
-		)
+		const createMultipartUploadCommand = new CreateMultipartUploadCommand(createUploadCommand)
 		const multipartUploadData = await s3.send(createMultipartUploadCommand)
 
 		const partSize = 5 * 1024 * 1024
@@ -130,9 +123,7 @@ export async function POST(req: Request) {
 			},
 		}
 
-		const completeMultipartUploadCommand = new CompleteMultipartUploadCommand(
-			completeUploadParams
-		)
+		const completeMultipartUploadCommand = new CompleteMultipartUploadCommand(completeUploadParams)
 		const data = await s3.send(completeMultipartUploadCommand)
 
 		return Response.json(

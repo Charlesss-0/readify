@@ -1,12 +1,11 @@
 'use client'
 
 import { Alerts, Header, Sidebar } from '@/src/components'
-import React, { useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 
+import React from 'react'
 import { RootState } from '@/src/lib'
 import { theme } from '@/src/constants'
-import { usePathname } from 'next/navigation'
 import { useSelector } from 'react-redux'
 
 const loaderAnimation = keyframes`
@@ -71,26 +70,7 @@ const Loader = styled.div`
 `
 
 export default function LibraryLayout({ children }: { children: React.ReactNode }) {
-	const pathName = usePathname()
 	const { appState } = useSelector((state: RootState) => state.app)
-
-	useEffect(() => {
-		const handleRouteChange = () => {
-			if (pathName.includes('library')) {
-				window.dataLayer?.push({
-					event: 'library_page_view',
-					page: 'library',
-				})
-			} else if (pathName.includes('favorites')) {
-				window.dataLayer?.push({
-					event: 'favorite_page_view',
-					page: 'favorites',
-				})
-			}
-		}
-
-		handleRouteChange()
-	}, [pathName])
 
 	return (
 		<>
